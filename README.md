@@ -1,8 +1,10 @@
 # <img alt="Data FAIR logo" src="https://cdn.jsdelivr.net/gh/data-fair/data-fair@master/public/assets/logo.svg" width="40"> @data-fair/social
 
+*A service for social interactions and collaboration in the data-fair ecosystem.*
+
 ## Development environment
 
-This project requires yarn 2:
+This project requires a recent yarn version:
 
     npm i -g yarn
 
