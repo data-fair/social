@@ -46,7 +46,7 @@ describe('ratings', () => {
       score: 2
     })).data
     assert.equal(rating.owner.id, 'KWqAGZ4mG')
-    const userRatings = (await global.ax.dmeadus.get('/api/v1/ratings', { params: { user: 'dmeadus0' } })).data
+    const userRatings = (await global.ax.dmeadusOrg.get('/api/v1/ratings', { params: { user: 'dmeadus0' } })).data
     assert.equal(userRatings.count, 1)
     const topicRatings = (await global.ax.dmeadus.get('/api/v1/ratings', { params: { topic: 'topic1' } })).data
     assert.equal(topicRatings.count, 0)

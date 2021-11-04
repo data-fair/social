@@ -10,15 +10,6 @@ describe('favorites', () => {
     }
   })
 
-  it('Fail to read without a topic or user filter', async () => {
-    try {
-      await global.ax.dmeadus.get('/api/v1/favorites')
-      assert.fail()
-    } catch (err) {
-      assert.equal(err.status, 400)
-    }
-  })
-
   it('Fail to create a favorite without topic', async () => {
     try {
       await global.ax.dmeadus.post('/api/v1/favorites', {})
@@ -40,7 +31,7 @@ describe('favorites', () => {
   it('Create a user favorite in an organization', async () => {
     const favorite = (await global.ax.dmeadusOrg.post('/api/v1/favorites', { topic: { key: 'topic1', title: 'Topic 1' } })).data
     assert.equal(favorite.owner.id, 'KWqAGZ4mG')
-    const userFavorites = (await global.ax.dmeadus.get('/api/v1/favorites', { params: { user: 'dmeadus0' } })).data
+    const userFavorites = (await global.ax.dmeadusOrg.get('/api/v1/favorites', { params: { user: 'dmeadus0' } })).data
     assert.equal(userFavorites.count, 1)
     const topicFavorites = (await global.ax.dmeadus.get('/api/v1/favorites', { params: { topic: 'topic1' } })).data
     assert.equal(topicFavorites.count, 0)
