@@ -54,6 +54,8 @@ app.use('/', (req, res, next) => {
 
 // Business routers
 app.use('/api/v1', require('./routers/root'))
+app.use('/api/v1/favorites', require('./routers/favorites'))
+app.use('/api/v1/ratings', require('./routers/ratings'))
 
 // Error management
 app.use((err, req, res, next) => {

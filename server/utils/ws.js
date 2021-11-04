@@ -13,7 +13,7 @@ Downstream examples:
 {type: 'error', data: {...}}
 */
 const { nanoid } = require('nanoid')
-const permissions = require('./permissions')
+// const permissions = require('./permissions')
 
 let cursor
 const subscribers = {}
@@ -49,6 +49,7 @@ exports.initServer = async (wss, db, session) => {
           if (!message.channel) {
             return ws.send(JSON.stringify({ type: 'error', data: '"channel" is required' }))
           }
+          /* TODO: uncomment and manage permissions
           if (message.type === 'subscribe') {
             if (process.env.NODE_ENV !== 'test') {
               const [type, id, subject] = message.channel.split('/')
@@ -67,7 +68,7 @@ exports.initServer = async (wss, db, session) => {
             subscribers[message.channel] = subscribers[message.channel] || {}
             delete subscribers[message.channel][clientId]
             return ws.send(JSON.stringify({ type: 'unsubscribe-confirm', channel: message.channel }))
-          }
+          } */
         } catch (err) {
           return ws.send(JSON.stringify({ type: 'error', data: err.message }))
         }

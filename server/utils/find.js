@@ -1,7 +1,4 @@
-const config = require('config')
 const createError = require('http-errors')
-const permissions = require('./permissions')
-const visibility = require('./visibility')
 
 // Util functions shared accross the main find (GET on collection) endpoints
 
@@ -11,25 +8,29 @@ function queryVal (val) {
   return val
 }
 
-exports.query = (req, fieldsMap, globalMode, extraFilters = []) => {
+exports.query = (req, fieldsMap = {}, extraFilters = []) => {
   const query = {}
   if (!req.query) return query
+  if (req.query.q) query.$text = { $search: req.query.q }
+  query.$and = [...extraFilters]
 
-  if (req.query.q) {
-    query.$text = {
-      $search: req.query.q
-    }
+  // a few first rules to manage visibility
+  if (req.query.user && req.query.user !== req.user.id) {
+    throw createError(400, 'User can only filter on his own id')
+  }
+  if (!req.query.topic && !req.query.user) {
+    throw createError(400, 'You must either filter on a topic or a user')
+  }
+  if (!req.query.user) {
+    query.$and.push({
+      'owner.type': req.user.activeAccount.type,
+      'owner.id': req.user.activeAccount.id
+    })
   }
 
-  query.$and = extraFilters
+  // apply common field mapping
+  Object.assign(fieldsMap, { user: 'user.id', topic: 'topic.key' })
 
-  // "standard" field mapping for applications/apis/datasets routes
-  // @deprecated owner-type and owner-id : we shall use the owner parameter bellow : owner=organization:id1,user:id2,organization:id3
-  Object.assign(fieldsMap, {
-    'owner-type': 'owner.type',
-    'owner-id': 'owner.id',
-    status: 'status'
-  })
   Object.keys(fieldsMap).filter(name => req.query[name] !== undefined).forEach(name => {
     const values = req.query[name].split(',').map(queryVal)
     const notNullValues = values.filter(v => v !== 'null')
@@ -42,47 +43,6 @@ exports.query = (req, fieldsMap, globalMode, extraFilters = []) => {
     query.$and.push({ $or: or })
   })
 
-  const showAll = req.query.showAll === 'true'
-  if (showAll && !req.user.adminMode) throw createError(400, 'Only super admins can override permissions filter with showAll parameter')
-
-  if (globalMode) {
-    // in global mode (remote services and base-applications) the resources do not have a owner
-    // they are managed by superadmin and theu are shared by public / privateAccess attributes
-
-    const accessFilter = []
-    if (!showAll) {
-      accessFilter.push({ public: true })
-    }
-    // You can use ?privateAccess=user:alban,organization:koumoul
-    const privateAccess = []
-    if (req.query.privateAccess) {
-      req.query.privateAccess.split(',').forEach(p => {
-        const [type, id] = p.split(':')
-        if (!req.user) throw createError(401)
-        if (!req.user.adminMode) {
-          if (type === 'user' && id !== req.user.id) throw createError(403)
-          if (type === 'organization' && !req.user.organizations.find(o => o.id === id)) throw createError(403)
-        }
-        privateAccess.push({ type, id })
-        accessFilter.push({ privateAccess: { $elemMatch: { type, id } } })
-      })
-    }
-    if (accessFilter.length) query.$and.push({ $or: accessFilter })
-  } else {
-    // in normal mode (datasets and applications) the visibility is determined from the owner and permissions
-
-    if (!showAll) {
-      query.$and.push({ $or: permissions.filter(req.user) })
-    }
-    if (visibility.filters(req.query)) {
-      query.$and.push({ $or: visibility.filters(req.query) })
-    }
-    if (req.query.owner) {
-      delete query['owner.type']
-      delete query['owner.id']
-      query.$and.push({ $or: exports.ownerFilters(req.query) })
-    }
-  }
   if (!query.$and.length) delete query.$and
   return query
 }
@@ -180,151 +140,4 @@ exports.parametersDoc = (filterFields) => [
       type: 'string'
     }
   }
-].concat(filterFields.concat([{
-  param: 'owner-type',
-  title: 'Type de propriétaire (user ou organization)'
-}, {
-  param: 'owner-id',
-  title: 'Identifiant du propriétaire'
-}]))
-
-exports.setResourceLinks = (resource, resourceType, publicUrl = config.publicUrl) => {
-  resource.href = `${publicUrl}/api/v1/${resourceType}s/${resource.id}`
-  resource.page = `${config.publicUrl}/${resourceType}/${resource.id}`
-  if (resourceType === 'application') resource.exposedUrl = `${publicUrl}/app/${resource.id}`
-}
-
-exports.facetsQuery = (req, facetFields = {}, filterFields, nullFacetFields = [], extraFilters) => {
-  filterFields = filterFields || facetFields
-  const facetsQueryParam = req.query.facets
-  const pipeline = []
-
-  if (req.query.q) {
-    pipeline.push({
-      $match: {
-        $text: {
-          $search: req.query.q
-        }
-      }
-    })
-  }
-
-  // Apply as early as possible the permissions filter
-  pipeline.push({
-    $match: {
-      $or: permissions.filter(req.user, req.query.public === 'true', req.query.private === 'true')
-    }
-  })
-
-  const fields = facetsQueryParam && facetsQueryParam.length && facetsQueryParam.split(',')
-    .filter(f => facetFields[f] || f === 'owner' || f === 'visibility')
-  if (fields) {
-    const facets = {}
-    fields.forEach(f => {
-      const facet = []
-      // Apply all the filters from the current query to the facet, except the one concerning current field
-      Object.keys(filterFields).filter(name => req.query[name] !== undefined && name !== f).forEach(name => {
-        facet.push({ $match: { [filterFields[name]]: { $in: req.query[name].split(',') } } })
-      })
-      if (f !== 'owner' && req.query.owner) {
-        facet.push({ $match: { $or: exports.ownerFilters(req.query) } })
-      }
-      if (f !== 'visibility' && visibility.filters(req.query)) {
-        facet.push({ $match: { $or: visibility.filters(req.query) } })
-      }
-      if (extraFilters) {
-        for (const extraFilter of extraFilters) {
-          facet.push({ $match: extraFilter })
-        }
-      }
-
-      // visibility is a special case.. we do a match and count
-      // for each public/private/protected instead of a $group
-      if (f === 'visibility') {
-        facets['visibility-public'] = [...facet, { $match: visibility.publicFilter }, { $count: 'count' }]
-        facets['visibility-private'] = [...facet, { $match: visibility.privateFilter }, { $count: 'count' }]
-        facets['visibility-protected'] = [...facet, { $match: visibility.protectedFilter }, { $count: 'count' }]
-        return
-      }
-
-      // another special case for base-application.. we perform a join
-      if (f === 'base-application') {
-        facet.push({
-          $lookup: {
-            from: 'base-applications', localField: 'url', foreignField: 'url', as: 'base-application'
-          }
-        })
-        facet.push({ $unwind: '$base-application' })
-        facet.push({ $group: { _id: { [f]: '$base-application', id: '$id' } } })
-      } else {
-        facet.push({
-          $unwind: {
-            path: '$' + (facetFields[f] || f).split('.').shift(),
-            preserveNullAndEmptyArrays: nullFacetFields.includes(f)
-          }
-        })
-        if (f === 'owner') facet.push({ $project: { 'owner.role': 0 } })
-        facet.push({ $group: { _id: { [f]: '$' + (facetFields[f] || f), id: '$id' } } })
-      }
-
-      facet.push({ $project: { [f]: '$_id.' + f, _id: 0 } })
-      facet.push({ $sortByCount: '$' + f })
-      facets[f] = facet
-    })
-    pipeline.push({ $facet: facets })
-    /* pipeline.push({
-      $facet: Object.assign({}, ...fields.map(f => ({
-        [f]: [{
-          $match: f === 'owner' ? ownerQuery : query
-        }, {
-          $unwind: '$' + (filterFields[f] || 'owner').split('.').shift()
-        }, {
-          $group: {
-            _id: { [f]: '$' + (filterFields[f] || 'owner'), id: '$id' }
-          }
-        }, { $project: { [f]: '$_id.' + f, _id: 0 }
-        }, {
-          $sortByCount: '$' + f
-        }]
-      })))
-    })
-    */
-  }
-  return pipeline
-}
-
-exports.parseFacets = (facets, nullFacetFields = []) => {
-  if (!facets) return
-  const res = {}
-  Object.entries(facets.pop()).forEach(([k, values]) => {
-    if (k.startsWith('visibility-')) {
-      res.visibility = res.visibility || []
-      res.visibility.push({ count: values[0] ? values[0].count : 0, value: k.replace('visibility-', '') })
-    } else if (k === 'base-application') {
-      res[k] = values.filter(r => r._id)
-        .map(r => ({
-          count: r.count,
-          value: {
-            url: r._id.url,
-            version: r._id.version || (r._id.meta && r._id.meta.version),
-            title: r._id.title || (r._id.meta && r._id.meta.title)
-          }
-        }))
-    } else {
-      res[k] = values
-        .filter(r => r._id || nullFacetFields.includes(k))
-        .map(r => ({ count: r.count, value: r._id }))
-    }
-  })
-  Object.keys(res).forEach(facetKey => {
-    res[facetKey].sort((a, b) => {
-      if (a.count < b.count) return 1
-      if (a.count > b.count) return -1
-      const titleA = (a.value && a.value.title) ? a.value.title : a.value
-      const titleB = (b.value && b.value.title) ? b.value.title : b.value
-      if (titleA < titleB) return -1
-      return 1
-    })
-  })
-  return res
-}
+].concat(filterFields)

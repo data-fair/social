@@ -1,6 +1,4 @@
-const config = require('config')
-const moment = require('moment')
-const rp = require('request-promise-native')
+const dayjs = require('dayjs')
 const fs = require('fs-extra')
 const asyncWrap = require('../utils/async-wrap')
 
@@ -17,12 +15,12 @@ async function nuxtStatus (req) {
 }
 
 async function singleStatus (req, fn, name) {
-  const time = moment()
+  const time = dayjs()
   try {
     await fn(req)
-    return { status: 'ok', name, timeInMs: moment().diff(time) }
+    return { status: 'ok', name, timeInMs: dayjs().diff(time) }
   } catch (err) {
-    return { status: 'error', message: err.toString(), name, timeInMs: moment().diff(time) }
+    return { status: 'error', message: err.toString(), name, timeInMs: dayjs().diff(time) }
   }
 }
 
