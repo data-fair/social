@@ -21,12 +21,10 @@ exports.query = (req, fieldsMap = {}, extraFilters = []) => {
   if (!req.query.topic && !req.query.user) {
     throw createError(400, 'You must either filter on a topic or a user')
   }
-  if (!req.query.user) {
-    query.$and.push({
-      'owner.type': req.user.activeAccount.type,
-      'owner.id': req.user.activeAccount.id
-    })
-  }
+  query.$and.push({
+    'owner.type': req.user.activeAccount.type,
+    'owner.id': req.user.activeAccount.id
+  })
 
   // apply common field mapping
   Object.assign(fieldsMap, { user: 'user.id', topic: 'topic.key' })
@@ -92,7 +90,7 @@ exports.pagination = (query, defaultSize = 10) => {
 }
 
 exports.project = (selectStr, exclude = []) => {
-  const select = { _id: 0 }
+  const select = {}
   if (!selectStr) {
     exclude.forEach(e => {
       select[e] = 0
@@ -101,7 +99,6 @@ exports.project = (selectStr, exclude = []) => {
     selectStr.split(',').forEach(s => {
       select[s] = 1
     })
-    Object.assign(select, { permissions: 1, id: 1, owner: 1 })
     exclude.forEach(e => {
       delete select[e]
     })

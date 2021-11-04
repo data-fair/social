@@ -15,6 +15,10 @@ const router = module.exports = express.Router()
 router.get('', asyncWrap(async (req, res) => {
   if (!req.user) throw createError(401)
   const collection = req.app.get('db').collection('favorites')
+
+  // favorites cannot be queries as ratings and messages
+  req.query.user = req.user.id
+
   const query = findUtils.query(req)
   const sort = findUtils.sort(req.query.sort)
   const project = findUtils.project(req.query.select)
@@ -31,6 +35,7 @@ router.post('', asyncWrap(async (req, res) => {
   if (!req.user) throw createError(401)
   const collection = req.app.get('db').collection('favorites')
   const favorite = req.body
+  delete favorite._id
   favorite.createdAt = new Date().toISOString()
   favorite.user = { id: req.user.id, name: req.user.name }
   favorite.owner = { type: req.user.activeAccount.type, id: req.user.activeAccount.id, name: req.user.activeAccount.name }
@@ -39,7 +44,7 @@ router.post('', asyncWrap(async (req, res) => {
     { 'owner.type': favorite.owner.type, 'owner.id': favorite.owner.id, 'topic.key': favorite.topic.key, 'user.id': favorite.user.id },
     favorite, { upsert: true })
   if (replaceResponse.value) {
-    favorite.id = replaceResponse.value._id.toString()
+    favorite._id = replaceResponse.value._id.toString()
   } else {
     favorite._id = replaceResponse.lastErrorObject.upserted.toString()
   }

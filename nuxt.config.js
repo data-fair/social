@@ -64,6 +64,7 @@ module.exports = {
     }
   },
   env: {
+    mainPublicUrl: config.publicUrl,
     basePath: config.basePath,
     directoryUrl: config.directoryUrl,
     openapiViewerUrl: config.openapiViewerUrl,

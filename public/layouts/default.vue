@@ -3,9 +3,7 @@
     :dark="$vuetify.theme.dark"
     class="data-fair"
   >
-    <layout-dynamic-style html-overflow="scroll" />
     <template v-if="isMainDomain">
-      <layout-navigation-left :nav-context="navContext" />
       <layout-navigation-top :nav-context="navContext" />
       <v-main>
         <nuxt />

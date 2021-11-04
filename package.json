@@ -27,7 +27,9 @@
       "standard",
       "plugin:vue/recommended"
     ],
-    "rules": {}
+    "rules": {
+      "vue/no-v-html": "off"
+    }
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.16.0",
@@ -58,6 +60,7 @@
     "express": "^4.17.1",
     "js-cookie": "^3.0.1",
     "mongodb": "^4.1.4",
+    "nodemon": "^2.0.14",
     "nuxt": "^2.15.8",
     "original-url": "^1.2.3",
     "reconnecting-websocket": "^4.4.0",

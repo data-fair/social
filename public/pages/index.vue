@@ -17,7 +17,7 @@ en:
 const { mapState, mapActions, mapGetters } = require('vuex')
 
 export default {
-  components: { VIframe },
+  components: {},
   data: () => ({}),
   computed: {
     ...mapState('session', ['user', 'initialized']),

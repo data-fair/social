@@ -31,6 +31,7 @@ router.post('', asyncWrap(async (req, res) => {
   if (!req.user) throw createError(401)
   const collection = req.app.get('db').collection('ratings')
   const rating = req.body
+  delete rating._id
   rating.createdAt = new Date().toISOString()
   rating.user = { id: req.user.id, name: req.user.name }
   rating.owner = { type: req.user.activeAccount.type, id: req.user.activeAccount.id, name: req.user.activeAccount.name }
@@ -39,7 +40,7 @@ router.post('', asyncWrap(async (req, res) => {
     { 'owner.type': rating.owner.type, 'owner.id': rating.owner.id, 'topic.key': rating.topic.key, 'user.id': rating.user.id },
     rating, { upsert: true })
   if (replaceResponse.value) {
-    rating.id = replaceResponse.value._id.toString()
+    rating._id = replaceResponse.value._id.toString()
   } else {
     rating._id = replaceResponse.lastErrorObject.upserted.toString()
   }
