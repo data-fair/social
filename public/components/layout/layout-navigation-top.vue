@@ -153,7 +153,7 @@ en:
 import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
-  props: ['navContext'],
+  props: { navContext: { type: Object, required: true } },
   computed: {
     ...mapState(['env', 'breadcrumbItems', 'breadcrumbsRouteName']),
     ...mapState('session', ['user', 'initialized']),
