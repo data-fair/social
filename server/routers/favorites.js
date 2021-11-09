@@ -20,7 +20,7 @@ router.get('', asyncWrap(async (req, res) => {
   req.query.user = req.user.id
 
   const query = findUtils.query(req)
-  const sort = findUtils.sort(req.query.sort)
+  const sort = findUtils.sort(req.query.sort, ['createdAt'])
   const project = findUtils.project(req.query.select)
   const [skip, size] = findUtils.pagination(req.query)
   const mongoQueries = [

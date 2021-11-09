@@ -2,9 +2,7 @@
   <v-row
     v-if="initialized"
     class="home my-0"
-  >
-    Hello !
-  </v-row>
+  />
 </template>
 
 <i18n lang="yaml">

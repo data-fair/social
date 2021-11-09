@@ -16,15 +16,18 @@ router.get('', asyncWrap(async (req, res) => {
   if (!req.user) throw createError(401)
   const collection = req.app.get('db').collection('ratings')
   const query = findUtils.query(req)
-  const sort = findUtils.sort(req.query.sort)
+  const sort = findUtils.sort(req.query.sort || 'createdAt:-1', ['createdAt'])
   const project = findUtils.project(req.query.select)
   const [skip, size] = findUtils.pagination(req.query)
   const mongoQueries = [
     size > 0 ? collection.find(query).collation({ locale: 'en' }).limit(size).skip(skip).sort(sort).project(project).toArray() : Promise.resolve([]),
-    collection.countDocuments(query)
+    collection.countDocuments(query),
+    req.query.facet ? collection.aggregate([{ $match: query }, { $facet: findUtils.facetQuery(req.query.facet, ['score']) }]).toArray() : Promise.resolve(undefined)
   ]
-  const [results, count] = await Promise.all(mongoQueries)
-  res.json({ count, results })
+  const [results, count, facetsAgg] = await Promise.all(mongoQueries)
+  const response = { count, results }
+  if (facetsAgg) response.facets = findUtils.facetResponse(facetsAgg)
+  res.json(response)
 }))
 
 router.post('', asyncWrap(async (req, res) => {

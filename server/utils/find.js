@@ -63,11 +63,12 @@ exports.ownerFilters = (reqQuery) => {
   return ownerFilters
 }
 
-exports.sort = (sortStr) => {
+exports.sort = (sortStr, fields) => {
   const sort = {}
   if (!sortStr) return sort
   sortStr.split(',').forEach(s => {
     const toks = s.split(':')
+    if (!fields.includes(toks[0])) throw createError(400, `sort on ${toks[0]} is not supported`)
     sort[toks[0]] = Number(toks[1])
   })
   return sort
@@ -104,6 +105,26 @@ exports.project = (selectStr, exclude = []) => {
     })
   }
   return select
+}
+
+exports.facetQuery = (facetStr, fields) => {
+  const facet = {}
+  facetStr.split(',').forEach(f => {
+    if (!fields.includes(f)) throw createError(400, `facet on ${f} is not supported`)
+    facet[f] = [{ $sortByCount: '$' + f }]
+  })
+  return facet
+}
+
+exports.facetResponse = (aggResult) => {
+  const facets = {}
+  for (const key of Object.keys(aggResult[0])) {
+    facets[key] = {}
+    for (const item of aggResult[0][key]) {
+      facets[key][item._id] = item.count
+    }
+  }
+  return facets
 }
 
 exports.parametersDoc = (filterFields) => [
