@@ -15,7 +15,7 @@ const router = module.exports = express.Router()
 router.get('', asyncWrap(async (req, res) => {
   if (!req.user) throw createError(401)
   const collection = req.app.get('db').collection('messages')
-  const query = findUtils.query(req)
+  const query = findUtils.query(req, { responseTo: 'responseTo._id' })
   const sort = findUtils.sort(req.query.sort || 'createdAt:-1', ['createdAt'])
   const project = findUtils.project(req.query.select)
   const [skip, size] = findUtils.pagination(req.query)

@@ -6,12 +6,20 @@
           v-model="newMessage"
           outlined
           hide-details="auto"
-          :label="$t('message')"
+          :label="responseTo ? $t('respond') : $t('message')"
           :rules="[value => value.length <= 200 || $t('tooLong') ]"
         />
       </v-form>
-      <v-row class="mx-0 mt-2 mb-0">
+      <v-row class="mx-0 my-2">
         <v-spacer />
+        <v-btn
+          v-if="responseTo"
+          text
+          class="mr-2"
+          @click="$emit('cancel')"
+        >
+          {{ $t('cancel') }}
+        </v-btn>
         <v-btn
           color="primary"
           :disabled="!newMessage || !valid"
@@ -27,16 +35,21 @@
 <i18n lang="yaml">
 fr:
   send: Envoyer
+  cancel: Annuler
   message: Saisissez un commentaire
+  respond: Saisissez une réponse
 en:
   send: Send
+  cancel: Cancel
   message: Type a comment
+  respond: Type a response
 </i18n>
 
 <script>
 export default {
   props: {
-    topic: { type: Object, required: true }
+    topic: { type: Object, required: true },
+    responseTo: { type: Object, required: false, default: null }
   },
   data () {
     return {
@@ -49,7 +62,15 @@ export default {
     async sendMessage () {
       if (!this.newMessage || !this.valid) return
       this.sending = true
-      const message = await this.$axios.$post('api/v1/messages', { topic: this.topic, content: this.newMessage })
+      const body = { topic: this.topic, content: this.newMessage }
+      if (this.responseTo) {
+        body.responseTo = {
+          _id: this.responseTo._id,
+          user: this.responseTo.user,
+          createdAt: this.responseTo.createdAt
+        }
+      }
+      const message = await this.$axios.$post('api/v1/messages', body)
       this.$emit('sent', message)
       this.newMessage = ''
       this.sending = false

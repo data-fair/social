@@ -1,6 +1,7 @@
 const topic = require('./partial/topic')
 const user = require('./partial/user')
 const owner = require('./partial/owner')
+const partialMessage = require('./partial/message')
 
 module.exports = {
   type: 'object',
@@ -27,9 +28,6 @@ module.exports = {
       type: 'string',
       maxLength: 200
     },
-    responseTo: {
-      title: 'Id of message to respond to',
-      type: 'string'
-    }
+    responseTo: partialMessage
   }
 }

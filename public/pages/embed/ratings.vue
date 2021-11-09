@@ -82,9 +82,11 @@
 fr:
   nbRatings: "score moyen sur {count} évaluations"
   noRating: Aucune évaluation soumise
+  showMore: Voir plus
 en:
   nbRatings: "mean score over {count} ratings"
   noRating: No rating submitted
+  showMore: Show more
 </i18n>
 
 <script>
