@@ -3,6 +3,8 @@ MAINTAINER "contact@koumoul.com"
 
 ENV NODE_ENV production
 
+RUN apk add --no-cache curl
+
 # Installing dependencies in webapp directory
 WORKDIR /webapp
 ADD LICENSE .
