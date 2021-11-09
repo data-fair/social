@@ -23,7 +23,7 @@
         <pre style="white-space: pre-wrap">{{ message.content }}</pre>
       </v-card-text>
     </v-card>
-    <message-list
+    <message-list-topic
       v-if="!message.responseTo"
       :topic="message.topic"
       :response-to="message"

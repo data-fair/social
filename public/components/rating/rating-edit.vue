@@ -9,19 +9,10 @@
         style="height:36px;"
         align="center"
       >
-        <div
-          v-for="i in [1, 2, 3, 4, 5]"
-          :key="i"
-          style="display:inline;"
-        >
-          <v-icon
-            :color="rating.score >= i ? 'accent' : 'default'"
-            :title="$t('setScore', {i})"
-            @click="rating.score = i; saveRating()"
-          >
-            {{ rating.score >= i ? 'mdi-star' : 'mdi-star-outline' }}
-          </v-icon>
-        </div>
+        <rating-stars
+          v-model="rating.score"
+          @input="saveRating"
+        />
         <v-spacer />
         <v-btn
           v-if="rating._id"

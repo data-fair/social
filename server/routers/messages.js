@@ -2,7 +2,6 @@ const express = require('express')
 const Ajv = require('ajv')
 const ajvFormats = require('ajv-formats')
 const createError = require('http-errors')
-const ObjectID = require('mongodb').ObjectID
 const findUtils = require('../utils/find')
 const asyncWrap = require('../utils/async-wrap')
 

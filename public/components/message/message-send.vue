@@ -38,11 +38,13 @@ fr:
   cancel: Annuler
   message: Saisissez un commentaire
   respond: Saisissez une réponse
+  tooLong: Votre message est limité à 200 caractères
 en:
   send: Send
   cancel: Cancel
   message: Type a comment
   respond: Type a response
+  tooLong: Your message is limited to 200 characters
 </i18n>
 
 <script>

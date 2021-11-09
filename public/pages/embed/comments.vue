@@ -1,5 +1,5 @@
 <template>
-  <message-list :topic="topic" />
+  <message-list-topic :topic="topic" />
 </template>
 
 <script>

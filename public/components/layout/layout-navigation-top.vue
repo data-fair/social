@@ -7,7 +7,6 @@
     class="px-0 main-app-bar"
   >
     <v-list
-      :style="$vuetify.breakpoint.mobile ? '' : 'width: 255px;'"
       class="py-0"
       color="transparent"
     >
