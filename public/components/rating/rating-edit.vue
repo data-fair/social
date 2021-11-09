@@ -35,14 +35,17 @@
       </v-row>
       <v-row class="mt-0">
         <v-col class="pt-1">
-          <v-textarea
-            v-if="!!rating.score"
-            v-model="rating.comment"
-            outlined
-            hide-details
-            :label="$t('comment')"
-            @change="saveRating"
-          />
+          <v-form v-model="valid">
+            <v-textarea
+              v-if="!!rating.score"
+              v-model="rating.comment"
+              outlined
+              hide-details="auto"
+              :label="$t('comment')"
+              :rules="[value => value.length <= 200 || $t('tooLong') ]"
+              @change="saveRating"
+            />
+          </v-form>
         </v-col>
       </v-row>
     </v-col>
@@ -55,11 +58,13 @@ fr:
   setScore: Attribuer une note de {i}/5
   deleteRating: Supprimer votre évaluation
   comment: Commentaire
+  tooLong: Votre commentaire est limité à 200 caractères
 en:
   rate: Rate {title}
   setScore: Give a score of {i}/5
   deleteRating: Delete your rating
   comment: Comment
+  tooLong: Your comment is limited to 200 characters
 </i18n>
 
 <script>
@@ -72,7 +77,8 @@ export default {
   data () {
     return {
       rating: null,
-      loading: true
+      loading: true,
+      valid: null
     }
   },
   computed: {
@@ -91,7 +97,7 @@ export default {
       this.loading = false
     },
     async saveRating () {
-      if (!this.rating.score) return
+      if (!this.rating.score || !this.valid) return
       this.rating = await this.$axios.$post('api/v1/ratings', this.rating)
     },
     async deleteRating () {
