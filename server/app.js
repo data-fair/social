@@ -56,6 +56,7 @@ app.use('/', (req, res, next) => {
 app.use('/api/v1', require('./routers/root'))
 app.use('/api/v1/favorites', require('./routers/favorites'))
 app.use('/api/v1/ratings', require('./routers/ratings'))
+app.use('/api/v1/messages', require('./routers/messages'))
 
 // Error management
 app.use((err, req, res, next) => {

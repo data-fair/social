@@ -1,9 +1,9 @@
 <template>
   <v-row v-if="!loading">
     <v-col>
-      <v-row>
+      <!--<v-row>
         <v-col>{{ $t('rate', {title: topic.title}) }}</v-col>
-      </v-row>
+      </v-row>-->
       <v-row
         class="ma-0"
         style="height:36px;"

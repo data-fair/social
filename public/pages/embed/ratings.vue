@@ -6,7 +6,7 @@
           type="info"
           outlined
         >
-          Aucune évaluation soumise
+          {{ $t('noRating') }}
         </v-alert>
       </v-row>
     </template>
@@ -81,8 +81,10 @@
 <i18n lang="yaml">
 fr:
   nbRatings: "score moyen sur {count} évaluations"
+  noRating: Aucune évaluation soumise
 en:
   nbRatings: "mean score over {count} ratings"
+  noRating: No rating submitted
 </i18n>
 
 <script>
@@ -116,7 +118,7 @@ export default {
           topic: this.topic.key,
           skip: concat ? this.ratings.results.length : 0,
           size,
-          select: 'user,score,comment',
+          select: 'user,score,comment,createdAt',
           facet: concat ? '' : 'score'
         }
       }))

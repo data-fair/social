@@ -26,6 +26,11 @@ exports.query = (req, fieldsMap = {}, extraFilters = []) => {
     'owner.id': req.user.activeAccount.id
   })
 
+  // pagination based on sliding date instead of skip
+  if (req.query.before) {
+    query.$and.push({ createdAt: { $lt: req.query.before } })
+  }
+
   // apply common field mapping
   Object.assign(fieldsMap, { user: 'user.id', topic: 'topic.key' })
 
