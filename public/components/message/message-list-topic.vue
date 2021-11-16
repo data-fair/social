@@ -41,14 +41,14 @@
 
       <v-slide-y-transition
         group
-        class="mt-0"
-        tag="v-row"
+        class="mt-0 ml-0 row"
+        tag="div"
       >
         <v-col
           v-for="message in sortedMessages"
           :key="message._id"
           cols="12"
-          class="pt-0 pb-1"
+          class="pt-0 pb-1 pl-0"
         >
           <message-card :message="message" />
         </v-col>
