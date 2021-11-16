@@ -1,14 +1,11 @@
 <template>
-  <v-container
-    v-if="messages && (messages.count || !hideSend)"
-    :class="{'pl-8': responseTo}"
-  >
+  <v-container v-if="messages && (messages.count || !hideSend)">
     <message-send
       v-if="!hideSend"
       :topic="topic"
       :response-to="responseTo"
-      @sent="message => {messages.results.unshift(message); messages.count += 1}"
-      @cancel="$emit('cancel-response')"
+      :class="{'mb-0': !responseTo}"
+      @sent="message => {messages.results.unshift(message); messages.count += 1; $emit('sent-response')}"
     />
     <v-row
       v-if="!messages.count && !responseTo"
@@ -24,28 +21,31 @@
     <template v-if="messages.count">
       <v-row
         v-if="messages.results.length < messages.count && reverse"
-        class="justify-center my-1"
+        :class="{'justify-center': !responseTo, 'mt-0': true}"
       >
-        <v-btn
-          text
-          color="primary"
-          :loading="loading"
-          @click="fetch(3, true)"
-        >
-          {{ $t('showMore') }}
-        </v-btn>
+        <v-col class="pt-0">
+          <v-btn
+            text
+            color="primary"
+            :loading="loading"
+            :x-small="!!responseTo"
+            @click="fetch(3, true)"
+          >
+            {{ responseTo ? $t('showMoreResponses') : $t('showMore') }}
+          </v-btn>
+        </v-col>
       </v-row>
 
       <v-slide-y-transition
         group
-        class="mt-1"
+        class="mt-0"
         tag="v-row"
       >
         <v-col
           v-for="message in sortedMessages"
           :key="message._id"
           cols="12"
-          class="pt-0"
+          class="pt-0 pb-1"
         >
           <message-card :message="message" />
         </v-col>
@@ -53,15 +53,16 @@
 
       <v-row
         v-if="messages.results.length < messages.count && !reverse"
-        class="justify-center my-1"
+        class="justify-center mt-4"
       >
         <v-btn
           text
           color="primary"
           :loading="loading"
+          :small="!!responseTo"
           @click="fetch(3, true)"
         >
-          {{ $t('showMore') }}
+          {{ responseTo ? $t('showMoreResponses') : $t('showMore') }}
         </v-btn>
       </v-row>
     </template>
@@ -71,10 +72,12 @@
 <i18n lang="yaml">
 fr:
   noComment: Aucune commentaire soumis
-  showMore: Voir plus
+  showMore: Plus de commentaires
+  showMoreResponses: Réponses précédentes
 en:
   noComment: No comment submitted
-  showMore: Show more
+  showMore: More comments
+  showMoreResponses: Previous responses
 </i18n>
 
 <script>

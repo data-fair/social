@@ -2,26 +2,37 @@
   <div>
     <v-card
       flat
-      outlined
+      :outlined="!message.responseTo"
+      tile
     >
-      <v-card-title class="py-1 px-2">
+      <v-card-title class="py-1 px-1">
         <user-short :user="message.user" />
-        <span class="caption text--secondary ml-2">{{ message.createdAt | fromNow }}</span>
+        <span
+          class="caption text--secondary ml-2"
+          :title="$dayjs(message.createdAt).format('LLL')"
+        >{{ message.createdAt | fromNow }}</span>
         <v-spacer />
-        <v-btn
-          v-if="!message.responseTo"
-          icon
-          :title="$t('respond')"
-          class="ml-2"
-          color="primary"
-          @click="responding=true"
-        >
-          <v-icon>mdi-comment-plus-outline</v-icon>
-        </v-btn>
       </v-card-title>
-      <v-card-text class="pa-2">
-        <pre style="white-space: pre-wrap">{{ message.content }}</pre>
+      <v-card-text class="px-2 py-0">
+        <pre
+          style="white-space: pre-wrap"
+          class="text-caption"
+        >{{ message.content }}</pre>
       </v-card-text>
+      <v-card-actions
+        v-if="!message.responseTo"
+        class="px-1 pt-0 pb-1"
+      >
+        <v-btn
+          x-small
+          text
+          :title="$t('respond')"
+          color="primary"
+          @click="responding=!responding"
+        >
+          répondre
+        </v-btn>
+      </v-card-actions>
     </v-card>
     <message-list-topic
       v-if="!message.responseTo"
@@ -29,7 +40,9 @@
       :response-to="message"
       :hide-send="!responding"
       :reverse="true"
-      @cancel-response="responding=false"
+      class="pa-0 pb-2 ml-4 pr-8 mb-2"
+      style="border-left: 1px solid rgba(0,0,0,.12);"
+      @sent-response="responding = false"
     />
   </div>
 </template>

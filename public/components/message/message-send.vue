@@ -1,33 +1,34 @@
 <template>
-  <v-row>
+  <v-row class="message-send">
     <v-col>
       <v-form v-model="valid">
         <v-textarea
           v-model="newMessage"
-          outlined
           hide-details="auto"
-          :label="responseTo ? $t('respond') : $t('message')"
+          :rows="1"
+          auto-grow
+          dense
+          :placeholder="responseTo ? $t('respond') : $t('message')"
           :rules="[value => value.length <= 200 || $t('tooLong') ]"
-        />
+          :flat="!!responseTo"
+          :solo="!!responseTo"
+          :outlined="!responseTo"
+          :autofocus="!!responseTo"
+        >
+          <template #append-outer>
+            <v-btn
+              icon
+              color="primary"
+              bottom
+              :disabled="!newMessage || !valid"
+              :title="$t('send')"
+              @click="sendMessage"
+            >
+              <v-icon>mdi-comment</v-icon>
+            </v-btn>
+          </template>
+        </v-textarea>
       </v-form>
-      <v-row class="mx-0 my-2">
-        <v-spacer />
-        <v-btn
-          v-if="responseTo"
-          text
-          class="mr-2"
-          @click="$emit('cancel')"
-        >
-          {{ $t('cancel') }}
-        </v-btn>
-        <v-btn
-          color="primary"
-          :disabled="!newMessage || !valid"
-          @click="sendMessage"
-        >
-          {{ $t('send') }}
-        </v-btn>
-      </v-row>
     </v-col>
   </v-row>
 </template>
@@ -35,15 +36,15 @@
 <i18n lang="yaml">
 fr:
   send: Envoyer
-  cancel: Annuler
-  message: Saisissez un commentaire
-  respond: Saisissez une réponse
+  sendResponse: Répondre
+  message: saisissez un commentaire
+  respond: saisissez une réponse
   tooLong: Votre message est limité à 200 caractères
 en:
   send: Send
-  cancel: Cancel
-  message: Type a comment
-  respond: Type a response
+  sendResponse: Respond
+  message: type a comment
+  respond: type a response
   tooLong: Your message is limited to 200 characters
 </i18n>
 
@@ -82,5 +83,15 @@ export default {
 </script>
 
 <style>
-
+.message-send {
+  position: relative;
+}
+.message-send .v-textarea {
+  padding-right: 40px;
+}
+.message-send .v-input__append-outer {
+  position: absolute;
+  bottom: -3px;
+  right: 0;
+}
 </style>
