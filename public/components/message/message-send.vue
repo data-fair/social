@@ -87,7 +87,7 @@ export default {
   position: relative;
 }
 .message-send .v-textarea {
-  padding-right: 40px;
+  padding-right: 40px !important;
 }
 .message-send .v-input__append-outer {
   position: absolute;
