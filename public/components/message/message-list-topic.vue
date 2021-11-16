@@ -1,5 +1,8 @@
 <template>
-  <v-container v-if="messages && (messages.count || !hideSend)">
+  <v-container
+    v-if="messages && (messages.count || !hideSend)"
+    fluid
+  >
     <message-send
       v-if="!hideSend"
       :topic="topic"

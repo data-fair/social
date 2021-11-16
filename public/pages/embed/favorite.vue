@@ -1,5 +1,8 @@
 <template>
-  <v-container v-if="!loading">
+  <v-container
+    v-if="!loading"
+    fluid
+  >
     <v-icon
       v-if="favorite"
       color="accent"

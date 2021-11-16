@@ -1,5 +1,8 @@
 <template>
-  <v-container v-if="ratings">
+  <v-container
+    v-if="ratings"
+    fluid
+  >
     <template v-if="!ratings.count">
       <v-row class="justify-center ma-2">
         <v-alert

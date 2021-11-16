@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <rating-edit
       v-if="topic"
       :topic="topic"
