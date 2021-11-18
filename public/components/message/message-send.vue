@@ -10,9 +10,7 @@
           dense
           :placeholder="responseTo ? $t('respond') : $t('message')"
           :rules="[value => value.length <= 200 || $t('tooLong') ]"
-          :flat="!!responseTo"
-          :solo="!!responseTo"
-          :outlined="!responseTo"
+          outlined
           :autofocus="!!responseTo"
         >
           <template #append-outer>
@@ -93,5 +91,8 @@ export default {
   position: absolute;
   bottom: -3px;
   right: 0;
+}
+.message-send .v-input__control {
+  border-radius: 0;
 }
 </style>
