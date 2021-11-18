@@ -11,6 +11,7 @@ module.exports = async () => {
     return { render: (req, res, next) => next() }
   } else {
     // Prepare nuxt for rendering and serving UI
+    nuxtConfig.dev = false
     const nuxt = new Nuxt(nuxtConfig)
     return {
       render: async (req, res, next) => {

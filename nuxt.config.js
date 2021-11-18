@@ -4,19 +4,20 @@ const en = require('vuetify/es5/locale/en').default
 let config = { ...require('config') }
 config.basePath = new URL(config.publicUrl + '/').pathname
 
-if (process.env.NODE_ENV === 'production') {
+if (!config.proxyNuxt) {
   const nuxtConfigInject = require('@koumoul/nuxt-config-inject')
   if (process.argv.slice(-1)[0] === 'build') config = nuxtConfigInject.prepare(config)
   else nuxtConfigInject.replace(config, ['nuxt-dist/**/*', 'public/static/**/*'])
 }
 
 module.exports = {
+  target: 'server',
   ssr: false,
   components: true,
   srcDir: 'public/',
   buildDir: 'nuxt-dist',
   build: {
-    publicPath: config.basePath + '/_nuxt/',
+    publicPath: '_nuxt/',
     transpile: [/@koumoul/]
   },
   loading: { color: '#1e88e5' }, // Customize the progress bar color
