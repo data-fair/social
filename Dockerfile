@@ -1,12 +1,12 @@
-FROM node:16.13.0-alpine
+FROM node:16.13.0-alpine3.13
 MAINTAINER "contact@koumoul.com"
 
 ENV NODE_ENV production
+WORKDIR /webapp
 
 RUN apk add --no-cache curl
 
 # Installing dependencies in webapp directory
-WORKDIR /webapp
 ADD LICENSE .
 ADD .yarnrc.yml .
 ADD package.json .
