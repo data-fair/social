@@ -33,7 +33,7 @@
               outlined
               hide-details="auto"
               :label="$t('comment')"
-              :rules="[value => value.length <= 200 || $t('tooLong') ]"
+              :rules="[value => value.length <= 200 || $t('tooLong'), value => value.split('\n').length <= 9 || $t('tooManyLineBreaks') ]"
               @change="saveRating"
             />
           </v-form>
@@ -50,12 +50,14 @@ fr:
   deleteRating: Supprimer votre évaluation
   comment: Commentaire
   tooLong: Votre commentaire est limité à 200 caractères
+  tooManyLineBreaks: Votre message est limité à 8 sauts de lignes
 en:
   rate: Rate {title}
   setScore: Give a score of {i}/5
   deleteRating: Delete your rating
   comment: Comment
   tooLong: Your comment is limited to 200 characters
+  tooManyLineBreaks: Your message is limited to 8 line breaks
 </i18n>
 
 <script>

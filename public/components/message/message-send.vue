@@ -9,20 +9,23 @@
           auto-grow
           dense
           :placeholder="responseTo ? $t('respond') : $t('message')"
-          :rules="[value => value.length <= 200 || $t('tooLong') ]"
+          :rules="[value => value.length <= 200 || $t('tooLong') , value => value.split('\n').length <= 9 || $t('tooManyLineBreaks') ]"
           outlined
           :autofocus="!!responseTo"
+          @keydown.enter="handleEnter"
         >
           <template #append-outer>
             <v-btn
-              icon
+              :fab="newMessage && valid"
+              :small="newMessage && valid"
               color="primary"
               bottom
               :disabled="!newMessage || !valid"
+              :icon="!newMessage || !valid"
               :title="$t('send')"
               @click="sendMessage"
             >
-              <v-icon>mdi-comment</v-icon>
+              <v-icon>mdi-send</v-icon>
             </v-btn>
           </template>
         </v-textarea>
@@ -38,12 +41,15 @@ fr:
   message: saisissez un commentaire
   respond: saisissez une réponse
   tooLong: Votre message est limité à 200 caractères
+  tooManyLineBreaks: Votre message est limité à 8 sauts de lignes
 en:
   send: Send
   sendResponse: Respond
   message: type a comment
   respond: type a response
   tooLong: Your message is limited to 200 characters
+  tooManyLineBreaks: Your message is limited to 8 line breaks
+
 </i18n>
 
 <script>
@@ -60,10 +66,14 @@ export default {
     }
   },
   methods: {
+    // ctr-enter to send message
+    handleEnter (e) {
+      if (e.ctrlKey) this.sendMessage()
+    },
     async sendMessage () {
       if (!this.newMessage || !this.valid) return
       this.sending = true
-      const body = { topic: this.topic, content: this.newMessage }
+      const body = { topic: this.topic, content: this.newMessage.trim() }
       if (this.responseTo) {
         body.responseTo = {
           _id: this.responseTo._id,
@@ -89,8 +99,8 @@ export default {
 }
 .message-send .v-input__append-outer {
   position: absolute;
-  bottom: -3px;
-  right: 0;
+  bottom: -4px;
+  right: -2px;
 }
 .message-send .v-input__control {
   border-radius: 0;
