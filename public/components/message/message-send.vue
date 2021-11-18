@@ -9,7 +9,7 @@
           auto-grow
           dense
           :placeholder="responseTo ? $t('respond') : $t('message')"
-          :rules="[value => value.length <= 200 || $t('tooLong') , value => value.split('\n').length <= 9 || $t('tooManyLineBreaks') ]"
+          :rules="[value => value.length <= 200 || $t('tooLong'), value => value.split('\n').length <= 9 || $t('tooManyLineBreaks') ]"
           outlined
           :autofocus="!!responseTo"
           @keydown.enter="handleEnter"
