@@ -16,7 +16,7 @@
       <v-card-text class="px-2 py-0">
         <pre
           style="white-space: pre-wrap"
-          class="text-caption"
+          class="text-body-2"
         >{{ message.content }}</pre>
       </v-card-text>
       <v-card-actions
@@ -41,7 +41,6 @@
       :hide-send="!responding"
       :reverse="true"
       class="pa-0 pb-2 ml-4 pr-8 mb-2"
-      style="border-left: 1px solid rgba(0,0,0,.12);"
       @sent-response="responding = false"
     />
   </div>
