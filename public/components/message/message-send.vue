@@ -85,7 +85,7 @@ export default {
 
       this.sending = true
       if (this.editMessage) {
-        await this.$axios.$put(`api/v1/messages/${this.editMessage._id}/content`, this.newMessage)
+        await this.$axios.$put(`api/v1/messages/${this.editMessage._id}/content`, this.newMessage, { headers: { 'Content-Type': 'text/plain' } })
         this.$set(this.editMessage, 'editedAt', new Date().toISOString())
         this.$set(this.editMessage, 'content', this.newMessage)
         this.$emit('sent', this.editMessage)

@@ -82,7 +82,7 @@ fr:
   edit: Éditer le message
   delete: Supprimer le message
   deletedAt: message supprimé le {date}
-  editedAt: édité le {date}
+  editedAt: édité {date}
 en:
   respond: Respond
   edit: Edit the message

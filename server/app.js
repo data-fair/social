@@ -31,6 +31,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(require('body-parser').json())
+app.use(require('body-parser').text())
 app.use(require('cookie-parser')())
 app.use(i18n.middleware)
 app.use(session.auth)
