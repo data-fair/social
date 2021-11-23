@@ -2,6 +2,7 @@
   <v-container
     v-if="ratings"
     fluid
+    data-iframe-height
   >
     <rating-edit
       v-if="topic && $route.query.edit === 'true'"
@@ -58,7 +59,7 @@
           </v-row>
         </v-col>
       </v-row>
-      <v-row data-iframe-height>
+      <v-row>
         <v-col
           v-for="rating in ratings.results"
           :key="rating._id"
@@ -72,7 +73,6 @@
       <v-row
         v-if="ratings.results.length < ratings.count"
         class="justify-center"
-        data-iframe-height
       >
         <v-btn
           text
