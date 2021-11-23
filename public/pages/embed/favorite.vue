@@ -2,6 +2,7 @@
   <v-container
     v-if="!loading"
     fluid
+    data-iframe-height
   >
     <v-icon
       v-if="favorite"

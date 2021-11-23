@@ -53,7 +53,7 @@
           </v-row>
         </v-col>
       </v-row>
-      <v-row>
+      <v-row data-iframe-height>
         <v-col
           v-for="rating in ratings.results"
           :key="rating._id"
@@ -67,6 +67,7 @@
       <v-row
         v-if="ratings.results.length < ratings.count"
         class="justify-center"
+        data-iframe-height
       >
         <v-btn
           text

@@ -1,5 +1,8 @@
 <template>
-  <v-container fluid>
+  <v-container
+    fluid
+    data-iframe-height
+  >
     <rating-edit
       v-if="topic"
       :topic="topic"

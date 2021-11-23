@@ -2,6 +2,7 @@
   <v-container
     v-if="messages && (messages.count || !hideSend)"
     fluid
+    data-iframe-height
   >
     <message-send
       v-if="!hideSend"
