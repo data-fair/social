@@ -2,6 +2,7 @@
   <v-menu
     v-model="menu"
     :close-on-content-click="false"
+    min-width="300px"
   >
     <template #activator="{on, attrs}">
       <v-btn
