@@ -16,7 +16,10 @@ Vue.filter('date', (value, format = 'LLL') => {
 
 Vue.filter('fromNow', (value) => {
   if (!value) return
-  return dayjs(value).fromNow()
+  // prevent showing date in the future, can happen in case of small clock mismatch
+  const date = dayjs(value)
+  const now = dayjs()
+  return (date > now ? now : date).fromNow()
 })
 
 export default async ({ app }) => {
