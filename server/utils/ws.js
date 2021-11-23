@@ -107,7 +107,7 @@ exports.initServer = async (wss, db, session) => {
 // Listen to pubsub channel based on mongodb to support scaling on multiple processes
 let startDate = new Date().toISOString()
 const initCursor = (db, mongoChannel) => {
-  cursor = mongoChannel.find({}, { tailable: true, awaitdata: true })
+  cursor = mongoChannel.find({}, { tailable: true, awaitData: true })
   cursor.forEach(doc => {
     if (stopped) return
     if (doc && doc.type === 'message') {
