@@ -1,9 +1,9 @@
 <template>
   <v-row v-if="!loading">
     <v-col>
-      <!--<v-row>
+      <v-row>
         <v-col>{{ $t('rate', {title: topic.title}) }}</v-col>
-      </v-row>-->
+      </v-row>
       <v-row
         class="ma-0"
         style="height:36px;"
@@ -92,10 +92,12 @@ export default {
     async saveRating () {
       if (!this.rating.score || !this.valid) return
       this.rating = await this.$axios.$post('api/v1/ratings', this.rating)
+      this.$emit('change')
     },
     async deleteRating () {
       await this.$axios.$delete(`api/v1/ratings/${this.rating._id}`)
       this.emptyRating()
+      this.$emit('change')
     }
   }
 }

@@ -3,6 +3,11 @@
     v-if="ratings"
     fluid
   >
+    <rating-edit
+      v-if="topic && $route.query.edit === 'true'"
+      :topic="topic"
+      @change="fetch"
+    />
     <template v-if="!ratings.count">
       <v-row class="justify-center ma-2">
         <v-alert
