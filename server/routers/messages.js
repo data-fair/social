@@ -2,6 +2,7 @@ const express = require('express')
 const Ajv = require('ajv')
 const ajvFormats = require('ajv-formats')
 const createError = require('http-errors')
+const ObjectId = require('mongodb').ObjectId
 const findUtils = require('../utils/find')
 const asyncWrap = require('../utils/async-wrap')
 
@@ -38,5 +39,39 @@ router.post('', asyncWrap(async (req, res) => {
   if (!validate(message)) return res.status(400).send(validate.errors)
   const insertResponse = await collection.insertOne(message)
   message._id = insertResponse.insertedId.toString()
+  res.send(message)
+}))
+
+router.put('/:id/content', asyncWrap(async (req, res) => {
+  if (!req.user) throw createError(401)
+  const collection = req.app.get('db').collection('messages')
+  const message = (await collection.findOneAndUpdate(
+    { _id: req.params.id, 'user.id': req.user.id },
+    {
+      $set: {
+        content: req.body,
+        editedAt: new Date().toISOString()
+      }
+    },
+    { returnDocument: 'after' }
+  )).value
+  if (!message) return res.status(404).send()
+  res.send(message)
+}))
+
+router.delete('/:id/content', asyncWrap(async (req, res) => {
+  if (!req.user) throw createError(401)
+  const collection = req.app.get('db').collection('messages')
+  const message = (await collection.findOneAndUpdate(
+    { _id: new ObjectId(req.params.id), 'user.id': req.user.id },
+    {
+      $set: {
+        content: '',
+        deletedAt: new Date().toISOString()
+      }
+    },
+    { returnDocument: 'after' }
+  )).value
+  if (!message) return res.status(404).send()
   res.send(message)
 }))

@@ -2,7 +2,7 @@ const express = require('express')
 const Ajv = require('ajv')
 const ajvFormats = require('ajv-formats')
 const createError = require('http-errors')
-const ObjectID = require('mongodb').ObjectID
+const ObjectId = require('mongodb').ObjectId
 const findUtils = require('../utils/find')
 const asyncWrap = require('../utils/async-wrap')
 
@@ -54,6 +54,6 @@ router.post('', asyncWrap(async (req, res) => {
 router.delete('/:id', asyncWrap(async (req, res) => {
   if (!req.user) throw createError(401)
   const collection = req.app.get('db').collection('favorites')
-  await collection.deleteOne({ 'user.id': req.user.id, _id: ObjectID(req.params.id) })
+  await collection.deleteOne({ 'user.id': req.user.id, _id: ObjectId(req.params.id) })
   res.status(204).send()
 }))

@@ -12,9 +12,29 @@
           :title="$dayjs(message.createdAt).format('LLL')"
         >{{ message.createdAt | fromNow }}</span>
         <v-spacer />
+        <template v-if="user && user.id === message.user.id">
+          <!--<v-btn
+            x-small
+            icon
+            :title="$t('edit')"
+            @click="editing = true"
+          >
+            <v-icon>mdi-pencil</v-icon>
+          </v-btn>-->
+          &nbsp;
+          <message-delete-menu
+            v-if="!message.deletedAt"
+            :message="message"
+          />
+        </template>
       </v-card-title>
       <v-card-text class="px-2 py-0">
+        <span
+          v-if="message.deletedAt"
+          class="text-caption font-italic"
+        >{{ $t('deletedAt', {date: $options.filters.fromNow(message.deletedAt)}) }}</span>
         <pre
+          v-else
           style="white-space: pre-wrap"
           class="text-body-2"
         >{{ message.content }}</pre>
@@ -49,19 +69,29 @@
 <i18n lang="yaml">
 fr:
   respond: Répondre
+  edit: Éditer le message
+  delete: Supprimer le message
+  deletedAt: message supprimé le {date}
 en:
   respond: Respond
+  edit: Edit the message
+  delete: Delete the message
 </i18n>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   props: {
     message: { type: Object, required: true }
   },
   data () {
     return {
-      responding: false
+      responding: false,
+      editing: true
     }
+  },
+  computed: {
+    ...mapState('session', ['user'])
   }
 }
 </script>

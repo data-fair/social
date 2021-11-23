@@ -114,7 +114,7 @@ export default {
         topic: this.topic.key,
         before: concat ? this.messages.results[this.messages.results.length - 1].createdAt : '',
         size,
-        select: 'user,content,createdAt,responseTo',
+        select: 'user,content,createdAt,responseTo,deletedAt,editedAt',
         responseTo: this.responseTo ? this.responseTo._id : 'null',
         sort: 'createdAt:-1'
       }

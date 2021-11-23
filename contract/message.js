@@ -23,6 +23,16 @@ module.exports = {
       type: 'string',
       format: 'date-time'
     },
+    editedAt: {
+      title: 'Date',
+      type: 'string',
+      format: 'date-time'
+    },
+    deletedAt: {
+      title: 'Date',
+      type: 'string',
+      format: 'date-time'
+    },
     content: {
       title: 'Message',
       type: 'string',
