@@ -14,6 +14,7 @@
         <span
           v-if="message.editedAt"
           class="text-caption text--secondary font-italic"
+          :title="$dayjs(message.editedAt).format('LLL')"
         >&nbsp;({{ $t('editedAt', {date: $options.filters.fromNow(message.editedAt)}) }})</span>
         <v-spacer />
         <template v-if="user && user.id === message.user.id">
@@ -37,6 +38,7 @@
         <span
           v-if="message.deletedAt"
           class="text-caption font-italic"
+          :title="$dayjs(message.deletedAt).format('LLL')"
         >{{ $t('deletedAt', {date: $options.filters.fromNow(message.deletedAt)}) }}</span>
         <message-send
           v-else-if="editing"
