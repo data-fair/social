@@ -11,16 +11,21 @@
           class="caption text--secondary ml-2"
           :title="$dayjs(message.createdAt).format('LLL')"
         >{{ message.createdAt | fromNow }}</span>
+        <span
+          v-if="message.editedAt"
+          class="text-caption text--secondary font-italic"
+        >&nbsp;({{ $t('editedAt', {date: $options.filters.fromNow(message.editedAt)}) }})</span>
         <v-spacer />
         <template v-if="user && user.id === message.user.id">
-          <!--<v-btn
+          <v-btn
+            v-if="!message.deletedAt"
             x-small
             icon
             :title="$t('edit')"
             @click="editing = true"
           >
             <v-icon>mdi-pencil</v-icon>
-          </v-btn>-->
+          </v-btn>
           &nbsp;
           <message-delete-menu
             v-if="!message.deletedAt"
@@ -33,6 +38,11 @@
           v-if="message.deletedAt"
           class="text-caption font-italic"
         >{{ $t('deletedAt', {date: $options.filters.fromNow(message.deletedAt)}) }}</span>
+        <message-send
+          v-else-if="editing"
+          :edit-message="message"
+          @sent="editing = false"
+        />
         <pre
           v-else
           style="white-space: pre-wrap"
@@ -72,10 +82,13 @@ fr:
   edit: Éditer le message
   delete: Supprimer le message
   deletedAt: message supprimé le {date}
+  editedAt: édité le {date}
 en:
   respond: Respond
   edit: Edit the message
   delete: Delete the message
+  deletedAt: deleted {date}
+  editedAt: edited {date}
 </i18n>
 
 <script>
@@ -87,7 +100,7 @@ export default {
   data () {
     return {
       responding: false,
-      editing: true
+      editing: false
     }
   },
   computed: {

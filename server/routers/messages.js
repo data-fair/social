@@ -46,7 +46,7 @@ router.put('/:id/content', asyncWrap(async (req, res) => {
   if (!req.user) throw createError(401)
   const collection = req.app.get('db').collection('messages')
   const message = (await collection.findOneAndUpdate(
-    { _id: req.params.id, 'user.id': req.user.id },
+    { _id: new ObjectId(req.params.id), 'user.id': req.user.id },
     {
       $set: {
         content: req.body,

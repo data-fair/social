@@ -20,12 +20,18 @@
               :small="newMessage && valid"
               color="primary"
               bottom
-              :disabled="!newMessage || !valid"
+              :disabled="!newMessage || !valid || (editMessage && editMessage.content.trim() === newMessage.trim())"
               :icon="!newMessage || !valid"
               :title="$t('send')"
+              :loading="sending"
               @click="sendMessage"
             >
-              <v-icon>mdi-send</v-icon>
+              <v-icon v-if="editMessage">
+                mdi-pencil
+              </v-icon>
+              <v-icon v-else>
+                mdi-send
+              </v-icon>
             </v-btn>
           </template>
         </v-textarea>
@@ -55,8 +61,9 @@ en:
 <script>
 export default {
   props: {
-    topic: { type: Object, required: true },
-    responseTo: { type: Object, required: false, default: null }
+    topic: { type: Object, default: null },
+    responseTo: { type: Object, required: false, default: null },
+    editMessage: { type: Object, required: false, default: null }
   },
   data () {
     return {
@@ -65,6 +72,9 @@ export default {
       sending: false
     }
   },
+  created () {
+    if (this.editMessage) this.newMessage = this.editMessage.content
+  },
   methods: {
     // ctr-enter to send message
     handleEnter (e) {
@@ -72,17 +82,25 @@ export default {
     },
     async sendMessage () {
       if (!this.newMessage || !this.valid) return
+
       this.sending = true
-      const body = { topic: this.topic, content: this.newMessage.trim() }
-      if (this.responseTo) {
-        body.responseTo = {
-          _id: this.responseTo._id,
-          user: this.responseTo.user,
-          createdAt: this.responseTo.createdAt
+      if (this.editMessage) {
+        await this.$axios.$put(`api/v1/messages/${this.editMessage._id}/content`, this.newMessage)
+        this.$set(this.editMessage, 'editedAt', new Date().toISOString())
+        this.$set(this.editMessage, 'content', this.newMessage)
+        this.$emit('sent', this.editMessage)
+      } else {
+        const body = { topic: this.topic, content: this.newMessage.trim() }
+        if (this.responseTo) {
+          body.responseTo = {
+            _id: this.responseTo._id,
+            user: this.responseTo.user,
+            createdAt: this.responseTo.createdAt
+          }
         }
+        const message = await this.$axios.$post('api/v1/messages', body)
+        this.$emit('sent', message)
       }
-      const message = await this.$axios.$post('api/v1/messages', body)
-      this.$emit('sent', message)
       this.newMessage = ''
       this.sending = false
     }
