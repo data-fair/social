@@ -30,7 +30,7 @@
           color="primary"
           @click="responding=!responding"
         >
-          répondre
+          {{ $t('respond') }}
         </v-btn>
       </v-card-actions>
     </v-card>

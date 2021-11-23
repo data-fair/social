@@ -75,7 +75,7 @@
 
 <i18n lang="yaml">
 fr:
-  noComment: Aucune commentaire soumis
+  noComment: Aucun commentaire soumis
   showMore: Plus de commentaires
   showMoreResponses: Réponses précédentes
 en:

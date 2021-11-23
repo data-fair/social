@@ -91,7 +91,6 @@ export default {
 </script>
 
 <style>
-
 .message-send .v-textarea {
   padding-right: 40px !important;
 }
