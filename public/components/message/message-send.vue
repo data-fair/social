@@ -1,8 +1,5 @@
 <template>
-  <v-row
-    class="message-send"
-    data-iframe-height
-  >
+  <v-row class="message-send">
     <v-col>
       <v-form v-model="valid">
         <v-textarea

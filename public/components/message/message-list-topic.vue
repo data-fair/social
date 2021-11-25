@@ -12,6 +12,10 @@
       :class="{'mb-0': !responseTo}"
       @sent="message => {messages.results.unshift(message); messages.count += 1; $emit('sent-response')}"
     />
+    <div
+      data-iframe-height
+      style="width:100%;height:1px;"
+    />
     <template v-if="messages.count">
       <v-row
         v-if="messages.results.length < messages.count && reverse"
