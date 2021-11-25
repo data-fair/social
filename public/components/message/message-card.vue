@@ -3,7 +3,6 @@
     <v-card
       flat
       :outlined="!message.responseTo"
-      tile
     >
       <v-card-title class="py-1 px-1">
         <user-short :user="message.user" />
@@ -72,7 +71,7 @@
       :response-to="message"
       :hide-send="!responding"
       :reverse="true"
-      class="pa-0 pb-2 ml-4 pr-8 mb-2"
+      class="pa-1 pb-2 ml-4 pr-8 mb-2"
       @sent-response="responding = false"
     />
   </div>
