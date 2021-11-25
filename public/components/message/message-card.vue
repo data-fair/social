@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div data-iframe-height>
     <v-card
       flat
       :outlined="!message.responseTo"
