@@ -8,20 +8,10 @@
       v-if="!hideSend"
       :topic="topic"
       :response-to="responseTo"
+      :append-placeholder="(!responseTo && !messages.count) ? $t('noComment') : ''"
       :class="{'mb-0': !responseTo}"
       @sent="message => {messages.results.unshift(message); messages.count += 1; $emit('sent-response')}"
     />
-    <v-row
-      v-if="!messages.count && !responseTo"
-      class="justify-center ma-2"
-    >
-      <v-alert
-        type="info"
-        outlined
-      >
-        {{ $t('noComment') }}
-      </v-alert>
-    </v-row>
     <template v-if="messages.count">
       <v-row
         v-if="messages.results.length < messages.count && reverse"
@@ -75,11 +65,11 @@
 
 <i18n lang="yaml">
 fr:
-  noComment: Aucun commentaire soumis
+  noComment: " - aucun commentaire soumis"
   showMore: Plus de commentaires
   showMoreResponses: Réponses précédentes
 en:
-  noComment: No comment submitted
+  noComment: " - no comment submitted"
   showMore: More comments
   showMoreResponses: Previous responses
 </i18n>

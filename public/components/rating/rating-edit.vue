@@ -1,12 +1,20 @@
 <template>
-  <v-row v-if="!loading">
-    <v-col>
+  <v-row
+    v-if="!loading"
+    class="rating-edit"
+  >
+    <v-col class="pb-1">
       <v-row>
-        <v-col>{{ $t('rate', {title: topic.title}) }}</v-col>
+        <v-col>
+          {{ $t('rate', {title: topic.title}) }}
+          <span
+            v-if="subtitle"
+            class="text-caption text--secondary font-italic"
+          > - {{ subtitle }}</span>
+        </v-col>
       </v-row>
       <v-row
         class="ma-0"
-        style="height:36px;"
         align="center"
       >
         <rating-stars
@@ -24,19 +32,16 @@
           <v-icon>mdi-delete</v-icon>
         </v-btn>
       </v-row>
-      <v-row class="mt-0">
-        <v-col class="pt-1">
-          <v-form v-model="valid">
-            <v-textarea
-              v-if="!!rating.score"
-              v-model="rating.comment"
-              outlined
-              hide-details="auto"
-              :label="$t('comment')"
-              :rules="[value => value.length <= 200 || $t('tooLong'), value => value.split('\n').length <= 9 || $t('tooManyLineBreaks') ]"
-              @change="saveRating"
-            />
-          </v-form>
+      <v-row
+        v-if="!!rating.score"
+        class="mt-1 mb-0"
+      >
+        <v-col class="py-0">
+          <rating-comment
+            v-model="rating.comment"
+            :sending="sending"
+            @input="saveRating"
+          />
         </v-col>
       </v-row>
     </v-col>
@@ -46,18 +51,10 @@
 <i18n lang="yaml">
 fr:
   rate: Évaluez {title}
-  setScore: Attribuer une note de {i}/5
   deleteRating: Supprimer votre évaluation
-  comment: Commentaire
-  tooLong: Votre commentaire est limité à 200 caractères
-  tooManyLineBreaks: Votre message est limité à 8 sauts de lignes
 en:
   rate: Rate {title}
-  setScore: Give a score of {i}/5
   deleteRating: Delete your rating
-  comment: Comment
-  tooLong: Your comment is limited to 200 characters
-  tooManyLineBreaks: Your message is limited to 8 line breaks
 </i18n>
 
 <script>
@@ -65,13 +62,14 @@ import { mapState } from 'vuex'
 
 export default {
   props: {
-    topic: { type: Object, required: true }
+    topic: { type: Object, required: true },
+    subtitle: { type: String, default: null }
   },
   data () {
     return {
       rating: null,
       loading: true,
-      valid: null
+      sending: false
     }
   },
   computed: {
@@ -90,9 +88,11 @@ export default {
       this.loading = false
     },
     async saveRating () {
-      if (!this.rating.score || !this.valid) return
+      if (!this.rating.score) return
+      this.sending = true
       this.rating = await this.$axios.$post('api/v1/ratings', this.rating)
       this.$emit('change')
+      this.sending = false
     },
     async deleteRating () {
       await this.$axios.$delete(`api/v1/ratings/${this.rating._id}`)
@@ -102,3 +102,14 @@ export default {
   }
 }
 </script>
+
+<style>
+.rating-edit .v-textarea {
+  padding-right: 40px !important;
+}
+.rating-edit .v-textarea .v-input__append-outer {
+  position: absolute;
+  bottom: -4px;
+  right: -2px;
+}
+</style>

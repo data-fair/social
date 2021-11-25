@@ -17,6 +17,13 @@
   </div>
 </template>
 
+<i18n lang="yaml">
+fr:
+  setScore: Attribuer une note de {i}/5
+en:
+  setScore: Give a score of {i}/5
+</i18n>
+
 <script>
 export default {
   props: {

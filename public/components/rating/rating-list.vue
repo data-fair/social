@@ -52,7 +52,7 @@
 
 <i18n lang="yaml">
 fr:
-  noRating: Aucun favori enregistré
+  noRating: Aucune évaluation enregistrée
   showMore: Voir plus
 en:
   noRating: No rating saved

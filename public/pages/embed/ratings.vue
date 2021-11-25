@@ -7,22 +7,13 @@
     <rating-edit
       v-if="topic && $route.query.edit === 'true'"
       :topic="topic"
+      :subtitle="!ratings.count ? $t('noRating') : ''"
       @change="fetch"
     />
-    <template v-if="!ratings.count">
-      <v-row class="justify-center ma-2">
-        <v-alert
-          type="info"
-          outlined
-        >
-          {{ $t('noRating') }}
-        </v-alert>
-      </v-row>
-    </template>
-    <template v-else>
-      <v-row class="px-4">
+    <template v-if="ratings && ratings.count">
+      <v-row class="px-4 mt-1">
         <v-col>
-          <span class="text-h1 text--secondary">{{ mean }}</span>
+          <span class="text-h2 text--secondary">{{ $n(mean, {maximumSignificantDigits: 2}) }}</span>
           <span
             class="text-h6 text--secondary"
             style="position:relative;bottom: 0"
@@ -31,30 +22,34 @@
           <span
             class="text-h6 text--secondary"
             style="position:relative;bottom: 0"
-          >{{ $t('nbRatings', {count: ratings.count}) }}</span>
+          >{{ $tc('nbRatings', ratings.count, {count: ratings.count}) }}</span>
         </v-col>
-        <v-col>
+        <v-col class="px-0">
           <v-row
             v-for="i in [1,2,3,4,5]"
             :key="i"
             class="ma-0"
           >
-            <div style="width:120px;display:inline;">
+            <div style="width:60px;display:inline;">
               <div
                 v-for="j in i"
                 :key="j"
-                style="display:inline;float:right;"
+                style="display:inline;float:right;height:18px;"
               >
                 <v-icon
                   color="default"
-                  small
+                  x-small
                 >
                   mdi-star
                 </v-icon>
               </div>
             </div>
-            <div style="width: 150px;display:inline;margin-top:12px;margin-left:12px;">
-              <v-progress-linear :value="((ratings.facets.score[i] || 0) / ratings.count) * 100" />
+            <div :style="`width:${$vuetify.breakpoint.smAndDown ? '60px' : '150px'};display:inline;margin-top:10px;margin-left:12px;`">
+              <v-progress-linear
+                color="accent"
+                rounded
+                :value="((ratings.facets.score[i] || 0) / ratings.count) * 100"
+              />
             </div>
           </v-row>
         </v-col>
@@ -89,11 +84,11 @@
 
 <i18n lang="yaml">
 fr:
-  nbRatings: "score moyen sur {count} évaluations"
-  noRating: Aucune évaluation soumise
+  nbRatings: " | 1 évaluation | score moyen sur {count} évaluations"
+  noRating: aucune évaluation soumise
   showMore: Voir plus
 en:
-  nbRatings: "mean score over {count} ratings"
+  nbRatings: " | 1 rating | mean score over {count} ratings"
   noRating: No rating submitted
   showMore: Show more
 </i18n>
@@ -133,6 +128,7 @@ export default {
           facet: concat ? '' : 'score'
         }
       }))
+      console.log(ratings)
       if (concat) this.ratings.results = this.ratings.results.concat(ratings.results)
       else this.ratings = ratings
       this.loading = false

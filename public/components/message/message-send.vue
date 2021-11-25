@@ -8,9 +8,9 @@
           :rows="1"
           auto-grow
           dense
-          :placeholder="responseTo ? $t('respond') : $t('message')"
-          :rules="[value => value.length <= 200 || $t('tooLong'), value => value.split('\n').length <= 9 || $t('tooManyLineBreaks') ]"
           outlined
+          :placeholder="responseTo ? $t('respond') : $t('message', {append: appendPlaceholder})"
+          :rules="[value => value.length <= 200 || $t('tooLong'), value => value.split('\n').length <= 9 || $t('tooManyLineBreaks') ]"
           :autofocus="!!responseTo"
           @keydown.enter="handleEnter"
         >
@@ -20,7 +20,7 @@
               :small="newMessage && valid"
               color="primary"
               bottom
-              :disabled="!newMessage || !valid || (editMessage && editMessage.content.trim() === newMessage.trim())"
+              :disabled="disabled"
               :icon="!newMessage || !valid"
               :title="$t('send')"
               :loading="sending"
@@ -44,14 +44,14 @@
 fr:
   send: Envoyer
   sendResponse: Répondre
-  message: saisissez un commentaire
+  message: saisissez un commentaire {append}
   respond: saisissez une réponse
   tooLong: Votre message est limité à 200 caractères
   tooManyLineBreaks: Votre message est limité à 8 sauts de lignes
 en:
   send: Send
   sendResponse: Respond
-  message: type a comment
+  message: type a comment {append}
   respond: type a response
   tooLong: Your message is limited to 200 characters
   tooManyLineBreaks: Your message is limited to 8 line breaks
@@ -63,13 +63,19 @@ export default {
   props: {
     topic: { type: Object, default: null },
     responseTo: { type: Object, required: false, default: null },
-    editMessage: { type: Object, required: false, default: null }
+    editMessage: { type: Object, required: false, default: null },
+    appendPlaceholder: { type: String, required: false, default: null }
   },
   data () {
     return {
       valid: null,
       newMessage: '',
       sending: false
+    }
+  },
+  computed: {
+    disabled () {
+      return !this.newMessage || !this.valid || (this.editMessage && this.editMessage.content.trim() === this.newMessage.trim())
     }
   },
   created () {
@@ -81,7 +87,7 @@ export default {
       if (e.ctrlKey) this.sendMessage()
     },
     async sendMessage () {
-      if (!this.newMessage || !this.valid) return
+      if (this.disabled) return
 
       this.sending = true
       if (this.editMessage) {
@@ -116,8 +122,5 @@ export default {
   position: absolute;
   bottom: -4px;
   right: -2px;
-}
-.message-send .v-input__control {
-  border-radius: 0;
 }
 </style>

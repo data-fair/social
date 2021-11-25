@@ -83,7 +83,7 @@ fr:
   respond: Répondre
   edit: Éditer le message
   delete: Supprimer le message
-  deletedAt: message supprimé le {date}
+  deletedAt: message supprimé {date}
   editedAt: édité {date}
 en:
   respond: Respond
