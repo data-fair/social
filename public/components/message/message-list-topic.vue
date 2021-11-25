@@ -12,7 +12,9 @@
       :class="{'mb-0': !responseTo}"
       @sent="message => {messages.results.unshift(message); messages.count += 1; $emit('sent-response')}"
     />
+    <!-- this div is required to make iframe-resizer work, it is broken by autofocus in iframe apparently -->
     <div
+      v-if="!hideSend"
       data-iframe-height
       style="width:100%;height:1px;"
     />
