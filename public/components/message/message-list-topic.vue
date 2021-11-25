@@ -2,7 +2,7 @@
   <v-container
     v-if="messages && (messages.count || !hideSend)"
     fluid
-    data-iframe-height
+    :data-iframe-height="!responseTo"
   >
     <message-send
       v-if="!hideSend"
@@ -11,12 +11,6 @@
       :append-placeholder="(!responseTo && !messages.count) ? $t('noComment') : ''"
       :class="{'mb-0': !responseTo}"
       @sent="message => {messages.results.unshift(message); messages.count += 1; $emit('sent-response')}"
-    />
-    <!-- this div is required to make iframe-resizer work, it is broken by autofocus in iframe apparently -->
-    <div
-      v-if="!hideSend"
-      data-iframe-height
-      style="width:100%;height:1px;"
     />
     <template v-if="messages.count">
       <v-row
@@ -42,12 +36,15 @@
         tag="div"
       >
         <v-col
-          v-for="message in sortedMessages"
+          v-for="(message, i) in sortedMessages"
           :key="message._id"
           cols="12"
           class="pt-0 pb-1 pl-0"
         >
-          <message-card :message="message" />
+          <message-card
+            :message="message"
+            :last="i === sortedMessages.length - 1"
+          />
         </v-col>
       </v-slide-y-transition>
 

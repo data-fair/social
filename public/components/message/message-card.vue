@@ -1,5 +1,5 @@
 <template>
-  <div data-iframe-height>
+  <div>
     <v-card
       flat
       :outlined="!message.responseTo"
@@ -74,6 +74,14 @@
       class="pa-1 pb-2 ml-4 pr-8 mb-2"
       @sent-response="responding = false"
     />
+    <!--
+      WARNING this element is required to make iframe-resizer work, it is broken by autofocus in iframe apparently
+      use /test-frame page to check that everything is ok
+    -->
+    <span
+      v-if="!message.responseTo && last"
+      style="font-size: 1px;"
+    >&nbsp;</span>
   </div>
 </template>
 
@@ -96,7 +104,8 @@ en:
 import { mapState } from 'vuex'
 export default {
   props: {
-    message: { type: Object, required: true }
+    message: { type: Object, required: true },
+    last: { type: Boolean, default: false }
   },
   data () {
     return {
