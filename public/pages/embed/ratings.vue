@@ -128,7 +128,6 @@ export default {
           facet: concat ? '' : 'score'
         }
       }))
-      console.log(ratings)
       if (concat) this.ratings.results = this.ratings.results.concat(ratings.results)
       else this.ratings = ratings
       this.loading = false
