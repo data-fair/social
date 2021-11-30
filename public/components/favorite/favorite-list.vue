@@ -18,7 +18,7 @@
     >
       <v-list-item-content>
         <v-list-item-title>
-          {{ favorite.topic.title }} ({{ favorite.topic.key }})
+          {{ favorite.topic.title || favorite.topic.key }}
         </v-list-item-title>
         <v-list-item-subtitle>
           {{ favorite.createdAt | fromNow }}
