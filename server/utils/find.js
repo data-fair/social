@@ -8,6 +8,11 @@ function queryVal (val) {
   return val
 }
 
+// cf https://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript
+function escapeRegex (string) {
+  return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
+}
+
 exports.query = (req, fieldsMap = {}, extraFilters = []) => {
   const query = {}
   if (!req.query) return query
@@ -45,6 +50,9 @@ exports.query = (req, fieldsMap = {}, extraFilters = []) => {
     }
     query.$and.push({ $or: or })
   })
+
+  // specific "prefix" filter on topic.key
+  if (req.query.prefix) query.$and.push({ 'topic.key': { $regex: `^${escapeRegex()}${req.query.prefix}.*` } })
 
   if (!query.$and.length) delete query.$and
   return query
