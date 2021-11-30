@@ -14,7 +14,7 @@
       v-for="favorite in favorites.results"
       :key="favorite._id"
       :href="favorite.url"
-      target="parent"
+      target="_top"
     >
       <v-list-item-content>
         <v-list-item-title>
@@ -28,7 +28,7 @@
         <v-btn
           icon
           color="warning"
-          @click="deleteFavorite(favorite._id)"
+          @click="e => deleteFavorite(favorite._id, e)"
         >
           <v-icon>mdi-delete</v-icon>
         </v-btn>
@@ -91,7 +91,8 @@ export default {
       }
       this.loading = false
     },
-    async deleteFavorite (id) {
+    async deleteFavorite (id, e) {
+      e.preventDefault()
       await this.$axios.$delete(`api/v1/favorites/${id}`)
       this.favorites.count -= 1
       this.favorites.results = this.favorites.results.filter(f => f._id !== id)
