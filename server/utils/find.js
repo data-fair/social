@@ -10,7 +10,7 @@ function queryVal (val) {
 
 // cf https://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript
 function escapeRegex (string) {
-  return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
+  return string.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
 }
 
 exports.query = (req, fieldsMap = {}, extraFilters = []) => {
