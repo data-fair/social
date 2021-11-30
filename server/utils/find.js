@@ -52,7 +52,7 @@ exports.query = (req, fieldsMap = {}, extraFilters = []) => {
   })
 
   // specific "prefix" filter on topic.key
-  if (req.query.prefix) query.$and.push({ 'topic.key': { $regex: `^${escapeRegex()}${req.query.prefix}.*` } })
+  if (req.query.prefix) query.$and.push({ 'topic.key': { $regex: `^${escapeRegex(req.query.prefix)}.*` } })
 
   if (!query.$and.length) delete query.$and
   return query

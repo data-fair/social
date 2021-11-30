@@ -13,6 +13,7 @@
     <v-list-item
       v-for="favorite in favorites.results"
       :key="favorite._id"
+      :href="favorite.url"
     >
       <v-list-item-content>
         <v-list-item-title>
@@ -36,7 +37,7 @@
       v-if="favorites.results.length < favorites.count"
       class="justify-center my-1"
       :disabled="loading"
-      @click="fetch(5, true)"
+      @click="fetch(size, true)"
     >
       {{ $t('showMore') }}
     </v-list-item>
@@ -55,7 +56,10 @@ en:
 <script>
 export default {
   props: {
-    user: { type: Object, required: true }
+    user: { type: Object, required: true },
+    size: { type: Number, default: 5 },
+    prefix: { type: String, default: null },
+    urlTemplate: { type: String, default: null }
   },
   data () {
     return {
@@ -63,22 +67,27 @@ export default {
     }
   },
   created () {
-    this.fetch(5, false)
+    this.fetch(this.size, false)
   },
   methods: {
     async fetch (size, concat) {
       this.loading = true
-      const favorites = (await this.$axios.$get('api/v1/favorites', {
-        params: {
-          sort: 'createdAt:-1',
-          user: this.user.id,
-          skip: concat ? this.favorites.results.length : 0,
-          size,
-          select: 'createdAt,topic,_id'
-        }
-      }))
+      const params = {
+        sort: 'createdAt:-1',
+        user: this.user.id,
+        skip: concat ? this.favorites.results.length : 0,
+        size,
+        select: 'createdAt,topic,_id'
+      }
+      if (this.prefix) params.prefix = this.prefix
+      const favorites = (await this.$axios.$get('api/v1/favorites', { params }))
       if (concat) this.favorites.results = this.favorites.results.concat(favorites.results)
       else this.favorites = favorites
+      if (this.urlTemplate) {
+        favorites.results.forEach(f => {
+          f.url = this.urlTemplate.replace('{suffix}', f.topic.key.replace(this.prefix, ''))
+        })
+      }
       this.loading = false
     },
     async deleteFavorite (id) {
