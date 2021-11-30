@@ -14,6 +14,7 @@
       v-for="favorite in favorites.results"
       :key="favorite._id"
       :href="favorite.url"
+      target="_blank"
     >
       <v-list-item-content>
         <v-list-item-title>
