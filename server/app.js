@@ -59,6 +59,18 @@ app.use('/api/v1/favorites', require('./routers/favorites'))
 app.use('/api/v1/ratings', require('./routers/ratings'))
 app.use('/api/v1/messages', require('./routers/messages'))
 
+let info = { version: process.env.NODE_ENV }
+try { info = require('../BUILD.json') } catch (err) {}
+app.get('/api/v1/info', (req, res) => {
+  if (!req.user) return res.status(401).send()
+  res.send(info)
+})
+app.get('/api/v1/admin/info', (req, res) => {
+  if (!req.user) return res.status(401).send()
+  if (!req.user.adminMode) return res.status(403).send()
+  res.send({ ...info, config })
+})
+
 // Error management
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {

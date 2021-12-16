@@ -26,7 +26,7 @@ RUN yarn run build
 
 # Adding server files
 ADD server server
-ADD README.md VERSION.json* .
+ADD README.md BUILD.json* ./
 
 # Default port of our webapps
 EXPOSE 8080
