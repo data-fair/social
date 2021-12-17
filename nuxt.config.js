@@ -46,8 +46,11 @@ module.exports = {
   axios: {
     browserBaseURL: config.basePath
   },
-  buildModules: ['@nuxtjs/vuetify'],
+  buildModules: [
+    ['@nuxtjs/vuetify', { icons: { iconfont: 'mdi' } }],
+    ['@nuxtjs/google-fonts', { download: true, display: 'swap', families: { Nunito: [100, 300, 400, 500, 700, 900] } }]],
   vuetify: {
+    customVariables: ['~assets/variables.scss'],
     theme: {
       dark: config.theme.dark,
       themes: {
@@ -55,16 +58,16 @@ module.exports = {
         dark: { ...config.theme.colors, ...config.theme.darkColors }
       }
     },
-    defaultAssets: {
-      font: {
-        family: 'Nunito'
-      }
-    },
+    treeShake: true,
+    defaultAssets: false,
     lang: {
       locales: { fr, en },
       current: config.i18n.defaultLocale
     }
   },
+  css: [
+    '@mdi/font/css/materialdesignicons.min.css'
+  ],
   env: {
     mainPublicUrl: config.publicUrl,
     basePath: config.basePath,

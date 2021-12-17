@@ -5,6 +5,7 @@
 /dist/
 /nuxt-dist
 /config/local-*
+.idea/
 
 # using yarn is recommended
 package-lock.json
@@ -18,3 +19,6 @@ package-lock.json
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+public/assets/css/
+public/assets/fonts/
