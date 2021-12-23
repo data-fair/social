@@ -1330,7 +1330,7 @@ __metadata:
   dependencies:
     "@babel/eslint-parser": ^7.16.0
     "@koumoul/nuxt-config-inject": ^0.4.10
-    "@koumoul/sd-express": ^1.1.1
+    "@koumoul/sd-express": ^1.1.2
     "@koumoul/sd-vue": ^1.3.0
     "@koumoul/v-iframe": ^0.9.1
     "@koumoul/vjsf": ^2.7.1
@@ -1448,9 +1448,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koumoul/sd-express@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "@koumoul/sd-express@npm:1.1.1"
+"@koumoul/sd-express@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "@koumoul/sd-express@npm:1.1.2"
   dependencies:
     axios: ^0.21.1
     cookies: ^0.7.2
@@ -1459,7 +1459,7 @@ __metadata:
     express: ^4.16.4
     jsonwebtoken: ^8.3.0
     jwks-rsa: ^1.3.0
-  checksum: 0a168ec0f4b51dce9527a5afb5d8581e190b429aaac716f26ac03733b3379a6ab6eea5e16cb0f106ff66f59c964bdf147fef5c55c487fa0e4df331d00a61ad04
+  checksum: 06efd33299a2429b9e23408d9f1f44ce43bf078c382d2ee5b1342695ed66f045e02bc481a97c69fd630517b4b9927fb42359d0b818db69a835ef483e34e7a184
   languageName: node
   linkType: hard
 
