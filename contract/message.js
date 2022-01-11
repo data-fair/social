@@ -2,6 +2,7 @@ const topic = require('./partial/topic')
 const user = require('./partial/user')
 const owner = require('./partial/owner')
 const partialMessage = require('./partial/message')
+const config = require('config')
 
 module.exports = {
   type: 'object',
@@ -36,7 +37,7 @@ module.exports = {
     content: {
       title: 'Message',
       type: 'string',
-      maxLength: 200
+      maxLength: config.messageMaxLength || 200
     },
     responseTo: partialMessage
   }

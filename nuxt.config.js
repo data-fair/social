@@ -76,7 +76,8 @@ module.exports = {
     analytics: config.analytics,
     notifyUrl: config.notifyUrl,
     theme: config.theme,
-    i18n: config.i18n
+    i18n: config.i18n,
+    messageMaxLength: config.messageMaxLength
   },
   head: {
     title: config.brand.title,
