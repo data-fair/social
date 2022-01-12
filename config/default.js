@@ -46,4 +46,5 @@ module.exports = {
     defaultLocale: 'fr'
   },
   messageMaxLength: 200
+  // allowedEditRoles: null
 }

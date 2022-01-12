@@ -43,6 +43,7 @@
           v-else-if="editing"
           :edit-message="message"
           @sent="editing = false"
+          @cancel="editing = false"
         />
         <pre
           v-else

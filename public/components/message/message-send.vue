@@ -85,9 +85,14 @@ export default {
     if (this.editMessage) this.newMessage = this.editMessage.content
   },
   methods: {
-    // ctr-enter to send message
+    // ctrl-enter to send message
     handleEnter (e) {
       if (e.ctrlKey) this.sendMessage()
+    },
+    // escape to cancel
+    handleEsc () {
+      this.$emit('cancel')
+      this.newNote = ''
     },
     async sendMessage () {
       if (this.disabled) return

@@ -78,6 +78,7 @@ module.exports = {
     theme: config.theme,
     i18n: config.i18n,
     messageMaxLength: config.messageMaxLength
+    // allowedEditRoles: config.allowedEditRoles
   },
   head: {
     title: config.brand.title,
