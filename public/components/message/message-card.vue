@@ -16,9 +16,9 @@
           :title="$dayjs(message.editedAt).format('LLL')"
         >&nbsp;({{ $t('editedAt', {date: $options.filters.fromNow(message.editedAt)}) }})</span>
         <v-spacer />
-        <template v-if="user && user.id === message.user.id">
+        <template v-if="canEdit">
           <v-btn
-            v-if="!message.deletedAt"
+            v-if="!message.deletedAt && user.id === message.user.id"
             x-small
             icon
             :title="$t('edit')"
@@ -115,7 +115,14 @@ export default {
     }
   },
   computed: {
-    ...mapState('session', ['user'])
+    ...mapState('session', ['user']),
+    canEdit () {
+      if (!this.user) return false
+      if (this.user.organization?.role === 'admin' && this.message.owner.id === this.user.organization.id) {
+        return true
+      }
+      return this.user.id === this.message.user.id
+    }
   }
 }
 </script>

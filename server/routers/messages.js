@@ -62,8 +62,13 @@ router.put('/:id/content', asyncWrap(async (req, res) => {
 router.delete('/:id/content', asyncWrap(async (req, res) => {
   if (!req.user) throw createError(401)
   const collection = req.app.get('db').collection('messages')
+
+  const filter = { _id: new ObjectId(req.params.id) }
+  if (req.user.activeAccount?.role === 'admin') filter['owner.id'] = req.user.activeAccount.id
+  else filter['user.id'] = req.user.id
+
   const message = (await collection.findOneAndUpdate(
-    { _id: new ObjectId(req.params.id), 'user.id': req.user.id },
+    filter,
     {
       $set: {
         content: '',

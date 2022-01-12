@@ -13,6 +13,7 @@
           :rules="[value => value.length <= messageMaxLength || $tc('tooLong', messageMaxLength, { nb: messageMaxLength }), value => value.split('\n').length <= 9 || $t('tooManyLineBreaks') ]"
           :autofocus="!!responseTo"
           @keydown.enter="handleEnter"
+          @keydown.esc="handleEsc"
         >
           <template #append-outer>
             <v-btn
