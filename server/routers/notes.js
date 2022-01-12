@@ -3,7 +3,7 @@ const Ajv = require('ajv')
 const ajvFormats = require('ajv-formats')
 const createError = require('http-errors')
 const ObjectId = require('mongodb').ObjectId
-const config = require('config')
+// const config = require('config')
 const findUtils = require('../utils/find')
 const asyncWrap = require('../utils/async-wrap')
 
