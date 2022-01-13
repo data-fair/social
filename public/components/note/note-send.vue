@@ -2,44 +2,17 @@
   <v-row class="note-send">
     <v-col>
       <v-form v-model="valid">
-        <v-textarea
+        <markdown-editor
           v-model="newNote"
-          hide-details="auto"
-          :rows="1"
-          auto-grow
-          dense
-          outlined
-          :placeholder="$t('message', {append: appendPlaceholder})"
-          :rules="[value => value.length <= messageMaxLength || $tc('tooLong', messageMaxLength, { nb: messageMaxLength }), value => value.split('\n').length <= 9 || $t('tooManyLineBreaks') ]"
-          autofocus
-          @keydown.enter="handleEnter"
-          @keydown.esc="handleEsc"
-        >
-          <template #append-outer>
-            <v-btn
-              :fab="newNote && valid"
-              :small="newNote && valid"
-              color="primary"
-              bottom
-              :disabled="disabled"
-              :icon="!newNote || !valid"
-              :title="$t('send')"
-              :loading="sending"
-              @click="sendNote"
-            >
-              <v-icon v-if="editNote">
-                mdi-pencil
-              </v-icon>
-              <v-icon v-else>
-                mdi-send
-              </v-icon>
-            </v-btn>
-          </template>
-        </v-textarea>
-        <small class="text--disabled">{{ $t('markdown') }}&nbsp;(<a
-          href="https://www.markdownguide.org/cheat-sheet"
-          target="_blank"
-        >?</a>)</small>
+          :append-placeholder="appendPlaceholder"
+          :valid="valid"
+          :edit-note="editNote"
+          :sending="sending"
+          style="min-height: 156px;"
+          @send="sendNote"
+          @handle-enter="handleEnter"
+          @handle-escape="handleEsc"
+        />
       </v-form>
     </v-col>
   </v-row>
@@ -62,6 +35,9 @@ en:
 
 <script>
 export default {
+  components: {
+    MarkdownEditor: () => import('@/components/util/markdown-editor.vue')
+  },
   props: {
     topic: { type: Object, default: null },
     editNote: { type: Object, required: false, default: null },
@@ -76,12 +52,7 @@ export default {
   },
   computed: {
     messageMaxLength () {
-      console.log(process.env.messageMaxLength)
-
       return process.env.messageMaxLength || 200
-    },
-    disabled () {
-      return !this.newNote || !this.valid || (this.editNote && this.editNote.content.trim() === this.newNote.trim())
     }
   },
   created () {
