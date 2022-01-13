@@ -34,6 +34,7 @@ module.exports = {
       type: 'string',
       format: 'date-time'
     },
+    moderatedBy: user,
     content: {
       title: 'Message',
       type: 'string',

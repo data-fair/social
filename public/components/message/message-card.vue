@@ -35,7 +35,12 @@
       </v-card-title>
       <v-card-text class="px-2 py-0">
         <span
-          v-if="message.deletedAt"
+          v-if="message.moderatedBy && message.deletedAt"
+          class="text-caption font-italic"
+          :title="$dayjs(message.deletedAt).format('LLL')"
+        >{{ $t('deletedAtModerated', {moderator: message.moderatedBy.name || message.moderatedBy.id, date: $options.filters.fromNow(message.deletedAt)}) }}</span>
+        <span
+          v-else-if="message.deletedAt"
           class="text-caption font-italic"
           :title="$dayjs(message.deletedAt).format('LLL')"
         >{{ $t('deletedAt', {date: $options.filters.fromNow(message.deletedAt)}) }}</span>
@@ -52,7 +57,7 @@
         >{{ message.content }}</pre>
       </v-card-text>
       <v-card-actions
-        v-if="!message.responseTo"
+        v-if="!message.responseTo && !message.deletedAt"
         class="px-1 pt-0 pb-1"
       >
         <v-btn
@@ -92,12 +97,14 @@ fr:
   edit: Éditer le message
   delete: Supprimer le message
   deletedAt: message supprimé {date}
+  deletedAtModerated: message supprimé par l'administrateur {moderator} {date}
   editedAt: édité {date}
 en:
   respond: Respond
   edit: Edit the message
   delete: Delete the message
   deletedAt: deleted {date}
+  deletedAtModerated: deleted by the admin {moderator} {date}
   editedAt: edited {date}
 </i18n>
 
