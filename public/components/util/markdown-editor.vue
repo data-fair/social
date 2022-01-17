@@ -14,7 +14,7 @@
       :outlined="!editNote"
       elevation="0"
     >
-      <textarea :placeholder="$t('message', {append: appendPlaceholder})" />
+      <textarea />
       <v-btn
         small
         color="primary"
@@ -114,6 +114,9 @@ export default {
     }
   },
   computed: {
+    computedPlaceholder () {
+      return this.$t('message', { append: this.appendPlaceholder || '' })
+    },
     disabledSend () {
       return !this.value || !this.valid || ((this.editNote?.content || '').trim() === this.value?.trim())
     },
@@ -128,6 +131,9 @@ export default {
   watch: {
     value () {
       if (this.value === '') this.easymde.value('')
+    },
+    computedPlaceholder () {
+      this.easymde.codemirror?.setOption('placeholder', this.computedPlaceholder)
     }
   },
   async mounted () {
@@ -145,6 +151,7 @@ export default {
       spellChecker: false,
       minHeight: '100px',
       maxHeight: '100px',
+      placeholder: this.computedPlaceholder,
       insertTexts: {
         link: [this.$t('linkBefore'), this.$t('linkAfter')],
         table: ['', `\n\n| ${this.$t('column')} 1 | ${this.$t('column')} 2 | ${this.$t('column')} 3 |\n| -------- | -------- | -------- |\n| ${this.$t('text')}     | ${this.$t('text')}     | ${this.$t('text')}     |\n\n`],

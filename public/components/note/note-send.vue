@@ -21,13 +21,11 @@
 <i18n lang="yaml">
 fr:
   send: Envoyer
-  message: saisissez un commentaire {append}
   tooLong: " | Votre commentaire est limité à 1 caractère | Votre commentaire est limité à {nb} caractères"
   tooManyLineBreaks: Votre commentaire est limité à 8 sauts de lignes
   markdown: Format markdown supporté
 en:
   send: Send
-  message: type a comment {append}
   tooLong: " | Your comment is limited to 1 character | Your comment is limited to {nb} characters"
   tooManyLineBreaks: Your comment is limited to 8 line breaks
   markdown: Markdown supported
