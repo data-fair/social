@@ -94,9 +94,10 @@ en:
 </i18n>
 
 <script>
-import marked from 'marked'
-import sanitizeHtml from 'sanitize-html'
 import 'easymde/dist/easymde.min.css'
+const { marked, renderer } = require('../util/marked')
+
+const sanitizeHtml = require('sanitize-html')
 
 export default {
   props: {
@@ -120,7 +121,8 @@ export default {
       return process.env.messageMaxLength || 200
     },
     markdownContent () {
-      return sanitizeHtml(marked.parse(this.value))
+      const allowedTags = sanitizeHtml.defaults.allowedTags.filter(v => v !== 'h1')
+      return sanitizeHtml(marked.parse(this.value, { renderer, breaks: true }), { allowedTags })
     }
   },
   watch: {
@@ -148,6 +150,7 @@ export default {
         table: ['', `\n\n| ${this.$t('column')} 1 | ${this.$t('column')} 2 | ${this.$t('column')} 3 |\n| -------- | -------- | -------- |\n| ${this.$t('text')}     | ${this.$t('text')}     | ${this.$t('text')}     |\n\n`],
         horizontalRule: ['', '\n\n-----\n\n']
       },
+      previewClass: ['text-body-2', 'custom-markdown', 'custom-preview'],
       // cf https://github.com/Ionaru/easy-markdown-editor/blob/master/src/js/easymde.js#L1380
       toolbar: [{
         name: 'bold',
@@ -259,5 +262,30 @@ export default {
 }
 .markdown-editor.theme--dark .editor-preview {
   background-color: #1E1E1E;
+}
+.custom-markdown > p {
+  margin-bottom: 0;
+}
+
+.custom-preview {
+  padding: 10px;
+  background: #fafafa;
+  white-space: pre-wrap;
+  line-height: 1rem;
+}
+
+.custom-preview > p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.custom-preview pre {
+  background: #eee;
+  margin-bottom: 10px;
+}
+.custom-preview table td,
+.custom-preview table th {
+  border: 1px solid #ddd;
+  padding: 5px;
 }
 </style>

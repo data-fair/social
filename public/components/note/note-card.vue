@@ -73,10 +73,7 @@ en:
 <script>
 import { mapState } from 'vuex'
 
-const marked = require('marked')
-const renderer = new marked.Renderer()
-marked.setOptions({ renderer, breaks: true })
-
+const { marked, renderer } = require('../util/marked')
 const sanitize = require('sanitize-html')
 
 export default {
@@ -101,7 +98,7 @@ export default {
   methods: {
     markdown (content) {
       const allowedTags = sanitize.defaults.allowedTags.filter(v => v !== 'h1')
-      return sanitize(marked.parse(content), { allowedTags })
+      return sanitize(marked.parse(content, { renderer, breaks: true }), { allowedTags })
     }
   }
 }
@@ -110,5 +107,10 @@ export default {
 <style>
 .custom-markdown > p {
   margin-bottom: 0;
+}
+.custom-markdown table td,
+.custom-markdown table th {
+  border: 1px solid #ddd;
+  padding: 5px;
 }
 </style>
