@@ -16,9 +16,9 @@
           :title="$dayjs(message.editedAt).format('LLL')"
         >&nbsp;({{ $t('editedAt', {date: $options.filters.fromNow(message.editedAt)}) }})</span>
         <v-spacer />
-        <template v-if="user && user.id === message.user.id">
+        <template v-if="canEdit">
           <v-btn
-            v-if="!message.deletedAt"
+            v-if="!message.deletedAt && user.id === message.user.id"
             x-small
             icon
             :title="$t('edit')"
@@ -35,7 +35,12 @@
       </v-card-title>
       <v-card-text class="px-2 py-0">
         <span
-          v-if="message.deletedAt"
+          v-if="message.moderatedBy && message.deletedAt"
+          class="text-caption font-italic"
+          :title="$dayjs(message.deletedAt).format('LLL')"
+        >{{ $t('deletedAtModerated', {moderator: message.moderatedBy.name || message.moderatedBy.id, date: $options.filters.fromNow(message.deletedAt)}) }}</span>
+        <span
+          v-else-if="message.deletedAt"
           class="text-caption font-italic"
           :title="$dayjs(message.deletedAt).format('LLL')"
         >{{ $t('deletedAt', {date: $options.filters.fromNow(message.deletedAt)}) }}</span>
@@ -43,6 +48,7 @@
           v-else-if="editing"
           :edit-message="message"
           @sent="editing = false"
+          @cancel="editing = false"
         />
         <pre
           v-else
@@ -51,7 +57,7 @@
         >{{ message.content }}</pre>
       </v-card-text>
       <v-card-actions
-        v-if="!message.responseTo"
+        v-if="!message.responseTo && !message.deletedAt"
         class="px-1 pt-0 pb-1"
       >
         <v-btn
@@ -91,12 +97,14 @@ fr:
   edit: Éditer le message
   delete: Supprimer le message
   deletedAt: message supprimé {date}
+  deletedAtModerated: message supprimé par l'administrateur {moderator} {date}
   editedAt: édité {date}
 en:
   respond: Respond
   edit: Edit the message
   delete: Delete the message
   deletedAt: deleted {date}
+  deletedAtModerated: deleted by the admin {moderator} {date}
   editedAt: edited {date}
 </i18n>
 
@@ -114,7 +122,14 @@ export default {
     }
   },
   computed: {
-    ...mapState('session', ['user'])
+    ...mapState('session', ['user']),
+    canEdit () {
+      if (!this.user) return false
+      if (this.user.organization?.role === 'admin' && this.message.owner.id === this.user.organization.id) {
+        return true
+      }
+      return this.user.id === this.message.user.id
+    }
   }
 }
 </script>

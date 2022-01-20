@@ -10,9 +10,10 @@
           dense
           outlined
           :placeholder="responseTo ? $t('respond') : $t('message', {append: appendPlaceholder})"
-          :rules="[value => value.length <= 200 || $t('tooLong'), value => value.split('\n').length <= 9 || $t('tooManyLineBreaks') ]"
+          :rules="[value => value.length <= messageMaxLength || $tc('tooLong', messageMaxLength, { nb: messageMaxLength }), value => value.split('\n').length <= 9 || $t('tooManyLineBreaks') ]"
           :autofocus="!!responseTo"
           @keydown.enter="handleEnter"
+          @keydown.esc="handleEsc"
         >
           <template #append-outer>
             <v-btn
@@ -46,14 +47,14 @@ fr:
   sendResponse: Répondre
   message: saisissez un commentaire {append}
   respond: saisissez une réponse
-  tooLong: Votre message est limité à 200 caractères
+  tooLong: " | Votre message est limité à 1 caractère | Votre message est limité à {nb} caractères"
   tooManyLineBreaks: Votre message est limité à 8 sauts de lignes
 en:
   send: Send
   sendResponse: Respond
   message: type a comment {append}
   respond: type a response
-  tooLong: Your message is limited to 200 characters
+  tooLong: " | Your message is limited to 1 character | Your message is limited to {nb} characters"
   tooManyLineBreaks: Your message is limited to 8 line breaks
 
 </i18n>
@@ -74,6 +75,9 @@ export default {
     }
   },
   computed: {
+    messageMaxLength () {
+      return process.env.messageMaxLength || 200
+    },
     disabled () {
       return !this.newMessage || !this.valid || (this.editMessage && this.editMessage.content.trim() === this.newMessage.trim())
     }
@@ -82,9 +86,14 @@ export default {
     if (this.editMessage) this.newMessage = this.editMessage.content
   },
   methods: {
-    // ctr-enter to send message
+    // ctrl-enter to send message
     handleEnter (e) {
       if (e.ctrlKey) this.sendMessage()
+    },
+    // escape to cancel
+    handleEsc () {
+      this.$emit('cancel')
+      this.newNote = ''
     },
     async sendMessage () {
       if (this.disabled) return

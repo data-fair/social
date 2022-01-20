@@ -35,7 +35,7 @@
         <v-btn
           color="warning"
           :loading="loading"
-          @click="deleteContent"
+          @click="deleteNote"
         >
           {{ $t('oui') }}
         </v-btn>
@@ -46,37 +46,30 @@
 
 <i18n lang="yaml">
 fr:
-  delete: Supprimer le message
+  delete: Supprimer le commentaire
   confirmDelete: Souhaitez vous confirmer la suppression ?
   yes: oui
   no: non
 en:
-  delete: Delete the message
+  delete: Delete the comment
   confirmDelete: Do you want to confirm the deletion ?
   yes: yes
   no: no
 </i18n>
 
 <script>
-import { mapState } from 'vuex'
-
 export default {
   props: {
-    message: { type: Object, required: true }
+    note: { type: Object, required: true }
   },
   data () {
     return { menu: false, loading: false }
   },
-  computed: {
-    ...mapState('session', ['user'])
-  },
   methods: {
-    async deleteContent () {
+    async deleteNote () {
       this.loading = true
-      await this.$axios.$delete(`api/v1/messages/${this.message._id}/content`)
-      this.$set(this.message, 'deletedAt', new Date().toISOString())
-      this.$set(this.message, 'content', '')
-      if (this.user.organization?.role === 'admin' && this.message.user.id !== this.user.id) this.$set(this.message, 'moderatedBy', { id: this.user.id, name: this.user.name })
+      await this.$axios.$delete(`api/v1/notes/${this.note._id}`)
+      this.$emit('delete', this.note._id)
       this.loading = false
       this.menu = false
     }

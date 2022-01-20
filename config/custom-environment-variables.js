@@ -51,5 +51,13 @@ module.exports = {
   i18n: {
     locales: 'I18N_LOCALES',
     defaultLocale: 'I18N_DEFAULT_LOCALE'
+  },
+  messageMaxLength: {
+    __name: 'MESSAGE_MAX_LENGTH',
+    __format: 'number'
   }
+  /* allowedEditRoles: {
+    __name: 'ALLOWED_EDIT_ROLES',
+    __format: 'json'
+  } */
 }

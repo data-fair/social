@@ -77,11 +77,6 @@ export default {
       if (concat) this.messages.results = this.messages.results.concat(messages.results)
       else this.messages = messages
       this.loading = false
-    },
-    async deleteMessage (id) {
-      await this.$axios.$delete(`api/v1/messages/${id}`)
-      this.messages.count -= 1
-      this.messages.results = this.messages.results.filter(f => f._id !== id)
     }
   }
 }

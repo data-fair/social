@@ -30,6 +30,8 @@ exports.init = async (db) => {
     exports.ensureIndex(db, 'ratings',
       { 'owner.type': 1, 'owner.id': 1, 'topic.key': 1, 'user.id': 1 }, { unique: true, name: 'main-keys' }),
     exports.ensureIndex(db, 'messages',
+      { 'owner.type': 1, 'owner.id': 1, 'topic.key': 1, createdAt: 1 }, { name: 'main-keys' }),
+    exports.ensureIndex(db, 'notes',
       { 'owner.type': 1, 'owner.id': 1, 'topic.key': 1, createdAt: 1 }, { name: 'main-keys' })
   ]
   await Promise.all(promises)
