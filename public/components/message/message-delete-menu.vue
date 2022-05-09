@@ -76,7 +76,7 @@ export default {
       await this.$axios.$delete(`api/v1/messages/${this.message._id}/content`)
       this.$set(this.message, 'deletedAt', new Date().toISOString())
       this.$set(this.message, 'content', '')
-      if (this.user.organization?.role === 'admin' && this.message.user.id !== this.user.id) this.$set(this.message, 'moderatedBy', { id: this.user.id, name: this.user.name })
+      if ((this.user.organization?.role === 'admin' || this.user.adminMode) && this.message.user.id !== this.user.id) this.$set(this.message, 'moderatedBy', { id: this.user.id, name: this.user.name })
       this.loading = false
       this.menu = false
     }

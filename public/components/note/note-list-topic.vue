@@ -76,7 +76,6 @@ export default {
   computed: {
     ...mapState('session', ['user']),
     canEdit () {
-      // if (process.env.allowedEditRoles && this.user && this.user.organization) return process.env.allowedEditRoles.includes(this.user.organization.role)
       return !!this.user
     }
   },

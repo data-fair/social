@@ -24,7 +24,8 @@ module.exports = {
   plugins: [
     { src: '~plugins/session' },
     { src: '~plugins/ws', ssr: false },
-    { src: '~plugins/dayjs' }
+    { src: '~plugins/dayjs' },
+    { src: '~/plugins/axios' }
   ],
   router: {
     base: config.basePath
@@ -78,7 +79,6 @@ module.exports = {
     theme: config.theme,
     i18n: config.i18n,
     messageMaxLength: config.messageMaxLength
-    // allowedEditRoles: config.allowedEditRoles
   },
   head: {
     title: config.brand.title,

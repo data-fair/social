@@ -38,7 +38,8 @@ router.post('', asyncWrap(async (req, res) => {
   delete favorite._id
   favorite.createdAt = new Date().toISOString()
   favorite.user = { id: req.user.id, name: req.user.name }
-  favorite.owner = { type: req.user.activeAccount.type, id: req.user.activeAccount.id, name: req.user.activeAccount.name }
+
+  favorite.owner = { type: findUtils.getOwner(req).type, id: findUtils.getOwner(req).id, name: findUtils.getOwner(req).name }
   if (!validate(favorite)) return res.status(400).send(validate.errors)
   const replaceResponse = await collection.findOneAndReplace(
     { 'owner.type': favorite.owner.type, 'owner.id': favorite.owner.id, 'topic.key': favorite.topic.key, 'user.id': favorite.user.id },

@@ -13,6 +13,23 @@ function escapeRegex (string) {
   return string.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
 }
 
+// Allow a super admin to access to any organization resource
+exports.getOwner = (req) => {
+  if (req.query?.owner?.length && req.user?.adminMode) {
+    return {
+      id: req.query.owner,
+      type: 'organization'
+      // name: owner.name
+    }
+  } else {
+    return {
+      id: req.user.activeAccount.id,
+      type: req.user.activeAccount.type,
+      name: req.user.activeAccount.name
+    }
+  }
+}
+
 exports.query = (req, fieldsMap = {}, extraFilters = []) => {
   const query = {}
   if (!req.query) return query
@@ -26,9 +43,10 @@ exports.query = (req, fieldsMap = {}, extraFilters = []) => {
   if (!req.query.topic && !req.query.user) {
     throw createError(400, 'You must either filter on a topic or a user')
   }
+
   query.$and.push({
-    'owner.type': req.user.activeAccount.type,
-    'owner.id': req.user.activeAccount.id
+    'owner.type': exports.getOwner(req).type,
+    'owner.id': exports.getOwner(req).id
   })
 
   // pagination based on sliding date instead of skip

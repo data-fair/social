@@ -36,7 +36,7 @@ router.post('', asyncWrap(async (req, res) => {
   delete message.moderatedBy
   message.createdAt = new Date().toISOString()
   message.user = { id: req.user.id, name: req.user.name }
-  message.owner = { type: req.user.activeAccount.type, id: req.user.activeAccount.id, name: req.user.activeAccount.name }
+  message.owner = { type: findUtils.getOwner(req).type, id: findUtils.getOwner(req).id, name: findUtils.getOwner(req).name }
   if (!validate(message)) return res.status(400).send(validate.errors)
   const insertResponse = await collection.insertOne(message)
   message._id = insertResponse.insertedId.toString()
@@ -65,7 +65,9 @@ router.delete('/:id/content', asyncWrap(async (req, res) => {
   const collection = req.app.get('db').collection('messages')
 
   const filter = { _id: new ObjectId(req.params.id) }
-  if (req.user.activeAccount?.role === 'admin') filter['owner.id'] = req.user.activeAccount.id
+
+  if (req.query?.owner?.length && req.user.adminMode) filter['owner.id'] = req.query.owner
+  else if (req.user.activeAccount?.role === 'admin') filter['owner.id'] = req.user.activeAccount.id
   else filter['user.id'] = req.user.id
 
   const message = await collection.findOne(filter)
@@ -77,7 +79,7 @@ router.delete('/:id/content', asyncWrap(async (req, res) => {
   }
 
   // Moderation : only admin can delete message from other users, if it's not his own message
-  if (message.user && message.user.id !== req.user.id && req.user.activeAccount?.role === 'admin') {
+  if (message.user && message.user.id !== req.user.id && (req.user.adminMode || req.user.activeAccount?.role === 'admin')) {
     toSet.moderatedBy = {
       id: req.user.id,
       name: req.user.name

@@ -90,9 +90,7 @@ export default {
   computed: {
     ...mapState('session', ['user']),
     canEdit () {
-      // let canRole = true
-      // if (process.env.allowedEditRoles && this.user && this.user.organization) canRole = process.env.allowedEditRoles.includes(this.user.organization.role)
-      return this.user && ((this.user.organization && this.user.organization.id === this.note.owner.id) || (this.user.id === this.note.user.id))// && canRole
+      return this.user && (this.user.adminMode || (this.user.organization && this.user.organization.id === this.note.owner.id) || (this.user.id === this.note.user.id))
     }
   },
   methods: {

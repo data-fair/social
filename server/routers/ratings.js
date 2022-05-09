@@ -37,7 +37,7 @@ router.post('', asyncWrap(async (req, res) => {
   delete rating._id
   rating.createdAt = new Date().toISOString()
   rating.user = { id: req.user.id, name: req.user.name }
-  rating.owner = { type: req.user.activeAccount.type, id: req.user.activeAccount.id, name: req.user.activeAccount.name }
+  rating.owner = { type: findUtils.getOwner(req).type, id: findUtils.getOwner(req).id, name: findUtils.getOwner(req).name }
   if (!validate(rating)) return res.status(400).send(validate.errors)
   const replaceResponse = await collection.findOneAndReplace(
     { 'owner.type': rating.owner.type, 'owner.id': rating.owner.id, 'topic.key': rating.topic.key, 'user.id': rating.user.id },

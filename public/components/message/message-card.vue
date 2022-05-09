@@ -125,6 +125,7 @@ export default {
     ...mapState('session', ['user']),
     canEdit () {
       if (!this.user) return false
+      if (this.user.adminMode) return true
       if (this.user.organization?.role === 'admin' && this.message.owner.id === this.user.organization.id) {
         return true
       }
