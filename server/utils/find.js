@@ -15,11 +15,11 @@ function escapeRegex (string) {
 
 // Allow a super admin to access to any organization resource
 exports.getOwner = (req) => {
-  if (req.query?.ownerId?.length && req.query?.ownerType?.length && req.query?.ownerName?.length && req.user?.adminMode) {
+  if (req.get('x-owner-id') && req.get('x-owner-type') && req.get('x-owner-name') && req.user?.adminMode) {
     return {
-      id: req.query.ownerId,
-      type: req.query.ownerType,
-      name: req.query.ownerName
+      id: req.get('x-owner-id'),
+      type: req.get('x-owner-type'),
+      name: req.get('x-owner-name')
     }
   } else {
     return {

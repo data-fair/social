@@ -66,7 +66,7 @@ router.delete('/:id/content', asyncWrap(async (req, res) => {
 
   const filter = { _id: new ObjectId(req.params.id) }
 
-  if (req.query?.ownerId?.length && req.user.adminMode) filter['owner.id'] = req.query.ownerId
+  if (req.get('x-owner-id') && req.user.adminMode) filter['owner.id'] = req.get('x-owner-id')
   else if (req.user.activeAccount?.role === 'admin') filter['owner.id'] = req.user.activeAccount.id
   else filter['user.id'] = req.user.id
 
