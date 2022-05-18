@@ -1,4 +1,4 @@
-FROM node:16.13.0-alpine3.13
+FROM node:16.15.0-alpine3.15
 MAINTAINER "contact@koumoul.com"
 
 ENV NODE_ENV production
