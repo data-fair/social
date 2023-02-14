@@ -3,10 +3,11 @@ const express = require('express')
 const eventToPromise = require('event-to-promise')
 const originalUrl = require('original-url')
 const { format: formatUrl } = require('url')
+const { createHttpTerminator } = require('http-terminator')
 const dbUtils = require('./utils/db')
 const wsUtils = require('./utils/ws')
 const i18n = require('./utils/i18n')
-const session = require('@koumoul/sd-express')({
+const session = require('@data-fair/sd-express')({
   directoryUrl: config.directoryUrl,
   privateDirectoryUrl: config.privateDirectoryUrl || config.directoryUrl
 })
@@ -90,6 +91,7 @@ app.use((err, req, res, next) => {
 
 const WebSocket = require('ws')
 const server = require('http').createServer(app)
+const httpTerminator = createHttpTerminator({ server })
 const wss = new WebSocket.Server({ server })
 
 // Run app and return it in a promise
@@ -123,7 +125,7 @@ exports.run = async () => {
 }
 
 exports.stop = async () => {
-  server.close()
+  await httpTerminator.terminate()
   wss.close()
   wsUtils.stop()
   await app.get('mongoClient').close()
