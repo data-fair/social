@@ -1,6 +1,4 @@
 const URL = require('url').URL
-const fr = require('vuetify/es5/locale/fr').default
-const en = require('vuetify/es5/locale/en').default
 let config = { ...require('config') }
 config.basePath = new URL(config.publicUrl + '/').pathname
 
