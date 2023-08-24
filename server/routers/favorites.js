@@ -54,6 +54,6 @@ router.post('', asyncWrap(async (req, res) => {
 router.delete('/:id', asyncWrap(async (req, res) => {
   if (!req.user) throw createError(401)
   const collection = req.app.get('db').collection('favorites')
-  await collection.deleteOne({ 'user.id': req.user.id, _id: ObjectId(req.params.id) })
+  await collection.deleteOne({ 'user.id': req.user.id, _id: new ObjectId(req.params.id) })
   res.status(204).send()
 }))
