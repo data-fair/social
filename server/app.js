@@ -83,6 +83,8 @@ app.use((err, req, res, next) => {
   if (!res.headersSent) {
     res.set('Cache-Control', 'no-cache')
     res.set('Expires', '-1')
+    // settings content-type as plain text instead of html to prevent XSS attack
+    res.type('text/plain')
     res.status(status).send(err.message)
   } else {
     res.end()
