@@ -2,16 +2,17 @@ const URL = require('url').URL
 let config = { ...require('config') }
 config.basePath = new URL(config.publicUrl + '/').pathname
 
-const isBuilding = process.argv.slice(-1)[0] === 'build'
+const isBuilding = process.argv[2] === 'build'
 
-if (!config.proxyNuxt) {
+if (process.env.NODE_ENV === 'production') {
   const nuxtConfigInject = require('@koumoul/nuxt-config-inject')
   if (isBuilding) config = nuxtConfigInject.prepare(config)
   else nuxtConfigInject.replace(config, ['nuxt-dist/**/*', 'public/static/**/*'])
 }
 
 let vuetifyOptions = {}
-if (isBuilding) {
+
+if (process.env.NODE_ENV !== 'production' || isBuilding) {
   const fr = require('vuetify/es5/locale/fr').default
   const en = require('vuetify/es5/locale/en').default
   vuetifyOptions = {
@@ -39,8 +40,14 @@ module.exports = {
   srcDir: 'public/',
   buildDir: 'nuxt-dist',
   build: {
-    publicPath: '_nuxt/',
-    transpile: [/@koumoul/, 'easymde', 'marked'] // Necessary for "à la carte" import of vuetify components
+    publicPath: config.publicUrl + '/_nuxt/',
+    transpile: [ // Necessary for "à la carte" import of vuetify components
+      /@koumoul/,
+      /@data-fair/,
+      'easymde',
+      'marked',
+      'sanitize-html'
+    ]
   },
   loading: { color: '#1e88e5' }, // Customize the progress bar color
   plugins: [

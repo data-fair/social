@@ -1,5 +1,5 @@
 const config = require('config')
-const { Nuxt } = require('nuxt')
+const { Nuxt } = require('nuxt-start')
 const nuxtConfig = require('../nuxt.config.js')
 
 module.exports = async () => {

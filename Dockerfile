@@ -1,32 +1,74 @@
-FROM node:16.13.0-alpine3.13
+############################################################################################################
+# Stage: prepare a base image with all native utils pre-installed, used both by builder and definitive image
+FROM node:18.18.2-alpine3.18 AS nativedeps
+RUN apk add --no-cache curl
+######################################
+FROM nativedeps AS builder
 MAINTAINER "contact@koumoul.com"
 
-ENV NODE_ENV production
+# Installing clean-modules
+RUN npm install --location=global clean-modules@3.0.4
+
 WORKDIR /webapp
 
-RUN apk add --no-cache curl
-
 # Installing dependencies in webapp directory
-ADD LICENSE .
-ADD .yarnrc.yml .
-ADD package.json .
-ADD yarn.lock .
-# adding yarn cache takes a bit of space but speeds up build, remove this line to inverse the trade-off
-# in following versions of the stack we will use the yarn pnp option to prevent creating the node_modules directory
-ADD .yarn .yarn
-RUN yarn
-ADD nodemon.json .
+COPY LICENSE .
+COPY package.json .
+COPY package-lock.json .
+
+RUN npm ci && clean-modules --yes "!**/*.eslintrc.json" "!*mocha/lib/test.js" "!**/*.mustache"
 
 # Adding UI files
-ADD public public
-ADD nuxt.config.js .
-ADD config config
-ADD contract contract
-RUN yarn run build
+COPY public public
+COPY nuxt.config.js .
+COPY config config
+COPY contract contract
+
+# Build UI
+ENV NODE_ENV production
+RUN npm run build
 
 # Adding server files
-ADD server server
-ADD README.md BUILD.json* ./
+COPY server server
+
+# Check quality
+COPY .eslintignore .eslintignore
+COPY .gitignore .gitignore
+RUN npm run lint
+COPY test test
+RUN npm run test
+RUN npm audit --omit=dev --audit-level=critical
+
+# Cleanup /webapp/node_modules so it can be copied by next stage
+RUN npm prune --production
+RUN rm -rf node_modules/.cache
+
+##################################
+# Stage: main nodejs service stage
+FROM nativedeps
+MAINTAINER "contact@koumoul.com"
+
+RUN apk add --no-cache dumb-init
+
+WORKDIR /webapp
+
+# We could copy /webapp whole, but this is better for layering / efficient cache use
+COPY --from=builder /webapp/node_modules /webapp/node_modules
+COPY --from=builder /webapp/package.json /webapp/package.json
+COPY --from=builder /webapp/nuxt-dist /webapp/nuxt-dist
+COPY nuxt.config.js nuxt.config.js
+COPY server server
+COPY config/default.js config/
+COPY config/production.js config/
+COPY config/custom-environment-variables.js config/
+COPY contract contract
+
+# Adding licence, manifests, etc.
+COPY README.md BUILD.json* ./
+COPY LICENSE .
+
+# configure node webapp environment
+ENV NODE_ENV production
 
 # Default port of our webapps
 EXPOSE 8080
