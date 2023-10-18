@@ -40,7 +40,13 @@ module.exports = {
   buildDir: 'nuxt-dist',
   build: {
     publicPath: '_nuxt/',
-    transpile: [/@koumoul/, 'easymde', 'marked'] // Necessary for "à la carte" import of vuetify components
+    transpile: [ // Necessary for "à la carte" import of vuetify components
+      /@koumoul/,
+      /@data-fair/,
+      'easymde',
+      'marked',
+      'sanitize-html'
+    ]
   },
   loading: { color: '#1e88e5' }, // Customize the progress bar color
   plugins: [

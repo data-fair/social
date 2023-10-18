@@ -11,9 +11,6 @@
   </v-container>
 </template>
 
-<i18n lang="yaml">
-</i18n>
-
 <script>
 import { mapState } from 'vuex'
 
