@@ -51,7 +51,8 @@
     "js-cookie": "^3.0.5",
     "mongodb": "^5.9.0",
     "nuxt-start": "^2.17.1",
-    "original-url": "^1.2.3"
+    "original-url": "^1.2.3",
+    "ws": "^8.14.2"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.22.15",
