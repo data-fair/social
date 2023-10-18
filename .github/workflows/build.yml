@@ -10,6 +10,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout git repository
+      uses: actions/checkout@v3
+
     # no need to work on a cache here, it is not faster than pulling
     # instead work on moving to some images hosted on ghcr.io, it is the fastest
     - name: Run test dependencies
