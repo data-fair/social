@@ -14,7 +14,7 @@ exports.send = async (notification) => {
   if (!notifyUrl) return
   if (notification?.topic?.key) events.emit(`notification-${notification.topic.key}`, notification)
   if (process.env.NODE_ENV !== 'test') {
-    await axios.post(`${notifyUrl}/api/v1/notifications`, notification, { params: { key: config.globalAPIKey } })
+    await axios.post(`${notifyUrl}/api/v1/notifications`, notification, { params: { key: config.secretKeys.notifications } })
       // .then(console.log)
       .catch(err => console.error('Failure to push notification', notification, err.response || err))
   }
