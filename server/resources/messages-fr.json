@@ -1,1 +1,3 @@
-{}
+{
+  "notifications.message": "Réponse de {{userName}} à votre commentaire : {{content}}"
+}

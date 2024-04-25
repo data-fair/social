@@ -46,8 +46,10 @@ router.post('', asyncWrap(async (req, res) => {
     send({
       sender: { type: 'organization', id: req.user.activeAccount.id },
       topic: { key: 'social::message-posted' },
-      title: { en: 'New message posted' },
-      extra: { message },
+      title: req.__all('notifications.message', {
+        userName: req.body.responseTo.user.name,
+        content: req.body.content
+      }),
       recipient: { id: req.body.responseTo.user.id },
       outputs: []
     }).catch(console.error)
