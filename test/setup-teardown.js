@@ -3,7 +3,7 @@ const fs = require('fs-extra')
 const axios = require('axios')
 const debug = require('debug')('test')
 const app = require('../server/app')
-const axiosAuth = require('@data-fair/sd-express').axiosAuth
+const { axiosAuth } = require('@data-fair/sd-express')
 
 before('init globals', async () => {
   debug('init globals')
@@ -17,7 +17,7 @@ before('init globals', async () => {
     opts.baseURL = config.publicUrl
 
     let ax
-    if (email) ax = await axiosAuth(email, org, opts)
+    if (email) ax = await axiosAuth(email, org, opts, config.directoryUrl)
     else ax = axios.create(opts)
 
     // customize axios errors for shorter stack traces when a request fails in a test

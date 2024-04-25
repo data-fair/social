@@ -4,21 +4,17 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - /var/tmp/dawizz_data:/data/db
-      - /var/tmp/dawizz_dump:/data/dump
+      - mongo-data:/data/db
   sd:
     image: ghcr.io/data-fair/simple-directory:master
-    ports:
-      - "6001:8080"
-      - "1080:1080"
+    network_mode: host
     environment:
       - DEBUG=webhooks
       - ADMINS=["alban.mouton@koumoul.com", "superadmin@test.com"]
       - PUBLIC_URL=http://localhost:5608/simple-directory
       - MAILDEV_ACTIVE=true
       - STORAGE_TYPE=file
-      - STORAGE_TYPE=mongo
-      - STORAGE_MONGO_URL=mongodb://mongo:27017/simple-directory
+      - STORAGE_MONGO_URL=mongodb://localhost:27017/simple-directory
       - NUXT_BUILD_BLOCKING=false
       - LIST_ENTITIES_MODE=anonymous
       - NO_UI=${NO_UI}
