@@ -5,6 +5,7 @@ const createError = require('http-errors')
 const ObjectId = require('mongodb').ObjectId
 const findUtils = require('../utils/find')
 const asyncWrap = require('../utils/async-wrap')
+const { send } = require('../utils/notifications')
 
 const ajv = new Ajv()
 ajvFormats(ajv)
@@ -40,6 +41,18 @@ router.post('', asyncWrap(async (req, res) => {
   if (!validate(message)) return res.status(400).send(validate.errors)
   const insertResponse = await collection.insertOne(message)
   message._id = insertResponse.insertedId.toString()
+
+  if (req.user.activeAccount.type === 'organization' && req.body.responseTo?.user && req.body.responseTo.user.id !== req.user.id) {
+    send({
+      sender: { type: 'organization', id: req.user.activeAccount.id },
+      topic: { key: 'social::message-posted' },
+      title: { en: 'New message posted' },
+      extra: { message },
+      recipient: { id: req.body.responseTo.user.id },
+      outputs: []
+    }).catch(console.error)
+  }
+
   res.send(message)
 }))
 
