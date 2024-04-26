@@ -17,7 +17,7 @@ const router = module.exports = express.Router()
  * @returns {string}
  */
 function getNotificationId (serviceKey = 'global', eventType) {
-  return `${serviceKey}:${eventType.replaceAll('-', ':')}`
+  return `${serviceKey}:${eventType}`
 }
 
 const serviceKey = 'social'
