@@ -28,7 +28,7 @@ if (process.env.NODE_ENV === 'development') {
   const { createProxyMiddleware } = require('http-proxy-middleware')
   app.use('/openapi-viewer', createProxyMiddleware({ target: 'http://localhost:5680', pathRewrite: { '^/openapi-viewer': '' } }))
   app.use('/simple-directory', createProxyMiddleware({ target: 'http://localhost:8080', pathRewrite: { '^/simple-directory': '' } }))
-  app.use('/notify', createProxyMiddleware({ target: 'http://localhost:8088', pathRewrite: { '^/notify': '' } }))
+  app.use('/notify', createProxyMiddleware({ target: 'http://localhost:6009', pathRewrite: { '^/notify': '' } }))
 }
 
 app.use(require('body-parser').json())
@@ -60,6 +60,7 @@ app.use('/api/v1/favorites', require('./routers/favorites'))
 app.use('/api/v1/ratings', require('./routers/ratings'))
 app.use('/api/v1/messages', require('./routers/messages'))
 app.use('/api/v1/notes', require('./routers/notes'))
+app.use('/api/v1/local-events', require('./routers/events'))
 
 let info = { version: process.env.NODE_ENV }
 try { info = require('../BUILD.json') } catch (err) {}
