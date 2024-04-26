@@ -60,6 +60,7 @@ app.use('/api/v1/favorites', require('./routers/favorites'))
 app.use('/api/v1/ratings', require('./routers/ratings'))
 app.use('/api/v1/messages', require('./routers/messages'))
 app.use('/api/v1/notes', require('./routers/notes'))
+app.use('/api/v1/local-events', require('./routers/events'))
 
 let info = { version: process.env.NODE_ENV }
 try { info = require('../BUILD.json') } catch (err) {}

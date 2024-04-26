@@ -13,6 +13,8 @@ i18n.configure({
 
 exports.middleware = i18n.init
 
+exports.i18nInstance = i18n
+
 exports.getObjectI18n = (i18n, key, args) => {
   return {
     fr: i18n.__({ phrase: key, locale: 'fr' }, args),
