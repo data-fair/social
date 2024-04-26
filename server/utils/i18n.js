@@ -1,28 +1,21 @@
-const config = require('config')
-const acceptLangParser = require('accept-language-parser')
+const i18n = require('i18n')
 
-const fr = require('../resources/messages-fr.json')
-const messages = {
-  fr,
-  en: { ...fr, ...require('../resources/messages-en.json') }
-}
+const locales = ['fr', 'en']
+const defaultLocale = 'fr'
 
-function getObjectI18n (__, key, args) {
+i18n.configure({
+  locales,
+  directory: './server/i18n',
+  defaultLocale,
+  fallbacks: { en: 'fr' },
+  directoryPermissions: '444'
+})
+
+exports.middleware = i18n.init
+
+exports.getObjectI18n = (i18n, key, args) => {
   return {
-    fr: __({ phrase: key, locale: 'fr' }, args),
-    en: __({ phrase: key, locale: 'en' }, args),
-    es: __({ phrase: key, locale: 'es' }, args),
-    pt: __({ phrase: key, locale: 'pt' }, args),
-    it: __({ phrase: key, locale: 'it' }, args),
-    de: __({ phrase: key, locale: 'de' }, args)
+    fr: i18n.__({ phrase: key, locale: 'fr' }, args),
+    en: i18n.__({ phrase: key, locale: 'en' }, args)
   }
-}
-
-exports.middleware = (req, res, next) => {
-  const locales = acceptLangParser.parse(req.get('Accept-Language'))
-  const localeCode = req.cookies.i18n_lang || (locales && locales[0] && locales[0].code) || config.i18n.defaultLocale
-  req.locale = localeCode
-  req.messages = messages[localeCode] || messages.fr
-  req.__all = (key, args) => getObjectI18n(req.__, key, args)
-  next()
 }

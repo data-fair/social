@@ -48,6 +48,7 @@
     "event-to-promise": "^0.8.0",
     "express": "^4.19.2",
     "http-terminator": "^3.2.0",
+    "i18n": "^0.15.1",
     "iframe-resizer": "^4.3.11",
     "js-cookie": "^3.0.5",
     "mongodb": "^5.9.2",

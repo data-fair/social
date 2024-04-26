@@ -6,6 +6,7 @@ const ObjectId = require('mongodb').ObjectId
 const findUtils = require('../utils/find')
 const asyncWrap = require('../utils/async-wrap')
 const { send } = require('../utils/notifications')
+const { getObjectI18n } = require('../utils/i18n')
 
 const ajv = new Ajv()
 ajvFormats(ajv)
@@ -46,7 +47,7 @@ router.post('', asyncWrap(async (req, res) => {
     send({
       sender: { type: 'organization', id: req.user.activeAccount.id },
       topic: { key: 'social::message-posted' },
-      title: req.__all('notifications.message', {
+      title: getObjectI18n(req, 'notifications.message', {
         userName: req.body.responseTo.user.name,
         content: req.body.content
       }),

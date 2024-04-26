@@ -27,7 +27,7 @@ if (process.env.NODE_ENV === 'development') {
   // Create a mono-domain environment with other services in dev
   const { createProxyMiddleware } = require('http-proxy-middleware')
   app.use('/openapi-viewer', createProxyMiddleware({ target: 'http://localhost:5680', pathRewrite: { '^/openapi-viewer': '' } }))
-  app.use('/simple-directory', createProxyMiddleware({ target: 'http://localhost:6001', pathRewrite: { '^/simple-directory': '' } }))
+  app.use('/simple-directory', createProxyMiddleware({ target: 'http://localhost:8080', pathRewrite: { '^/simple-directory': '' } }))
   app.use('/notify', createProxyMiddleware({ target: 'http://localhost:6009', pathRewrite: { '^/notify': '' } }))
 }
 
