@@ -1,13 +1,13 @@
 ############################################################################################################
 # Stage: prepare a base image with all native utils pre-installed, used both by builder and definitive image
-FROM node:18.18.2-alpine3.18 AS nativedeps
+FROM node:20.13.1-alpine3.19 AS nativedeps
 RUN apk add --no-cache curl
 ######################################
 FROM nativedeps AS builder
 MAINTAINER "contact@koumoul.com"
 
 # Installing clean-modules
-RUN npm install --location=global clean-modules@3.0.4
+RUN npm install --location=global clean-modules@3.0.5
 
 WORKDIR /webapp
 

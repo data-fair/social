@@ -78,6 +78,5 @@
     "sanitize-html": "^2.13.0",
     "tinycolor2": "^1.6.0",
     "vue": "^2.7.14"
-  },
-  "packageManager": "yarn@3.6.4"
+  }
 }
