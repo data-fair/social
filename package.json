@@ -38,13 +38,13 @@
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/i18n": "^7.3.1",
     "accept-language-parser": "^1.5.0",
-    "ajv": "^8.12.0",
+    "ajv": "^8.13.0",
     "ajv-formats": "^2.1.1",
     "axios": "^1.6.8",
     "config": "^3.3.11",
     "cookie-parser": "^1.4.6",
     "cookie-universal-nuxt": "^2.2.2",
-    "dayjs": "^1.11.10",
+    "dayjs": "^1.11.11",
     "event-to-promise": "^0.8.0",
     "express": "^4.19.2",
     "http-terminator": "^3.2.0",
@@ -54,10 +54,10 @@
     "mongodb": "^5.9.2",
     "nuxt-start": "^2.17.3",
     "original-url": "^1.2.3",
-    "ws": "^8.16.0"
+    "ws": "^8.17.0"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.24.1",
+    "@babel/eslint-parser": "^7.24.5",
     "@data-fair/sd-vue": "^2.7.0",
     "@koumoul/v-iframe": "^0.20.3",
     "@mdi/font": "^6.9.96",
