@@ -1,6 +1,6 @@
-const URL = require('url').URL
 let config = { ...require('config') }
-config.basePath = new URL(config.publicUrl + '/').pathname
+
+config.basePath = process.env.NODE_ENV === 'development' ? '' : '/social'
 
 const isBuilding = process.argv[2] === 'build'
 
@@ -40,7 +40,7 @@ module.exports = {
   srcDir: 'public/',
   buildDir: 'nuxt-dist',
   build: {
-    publicPath: config.publicUrl + '/_nuxt/',
+    publicPath: '_nuxt/',
     transpile: [ // Necessary for "à la carte" import of vuetify components
       /@koumoul/,
       /@data-fair/,
@@ -73,7 +73,7 @@ module.exports = {
     }
   }]],
   axios: {
-    browserBaseURL: config.basePath
+    browserBaseURL: '/'
   },
   buildModules: [
     ['@nuxtjs/vuetify', { icons: { iconfont: 'mdi' } }],
@@ -84,12 +84,10 @@ module.exports = {
     '@mdi/font/css/materialdesignicons.min.css'
   ],
   env: {
-    mainPublicUrl: config.publicUrl,
     basePath: config.basePath,
-    directoryUrl: config.directoryUrl,
-    openapiViewerUrl: config.openapiViewerUrl,
-    analytics: config.analytics,
-    notifyUrl: config.notifyUrl,
+    publicUrl: config.basePath,
+    directoryUrl: '/simple-directory',
+    notifyUrl: '/notify',
     theme: config.theme,
     i18n: config.i18n,
     messageMaxLength: config.messageMaxLength

@@ -31,7 +31,7 @@ export default {
   computed: {
     ...mapState(['env']),
     isMainDomain () {
-      return this.env.mainPublicUrl.startsWith(window.location.origin)
+      return this.env.publicUrl.startsWith(window.location.origin)
     }
   },
   mounted () {
