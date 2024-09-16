@@ -67,6 +67,8 @@ COPY contract contract
 COPY README.md BUILD.json* ./
 COPY LICENSE .
 
+RUN chmod -R 777 ./nuxt-dist
+
 # configure node webapp environment
 ENV NODE_ENV production
 
