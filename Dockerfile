@@ -67,7 +67,8 @@ COPY contract contract
 COPY README.md BUILD.json* ./
 COPY LICENSE .
 
-RUN chmod -R 777 ./nuxt-dist
+# Compatibility with OpenShift
+RUN chgrp -R 0 . && chmod -R g=u .
 
 # configure node webapp environment
 ENV NODE_ENV production
