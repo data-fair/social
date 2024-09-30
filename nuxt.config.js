@@ -73,7 +73,7 @@ module.exports = {
     }
   }]],
   axios: {
-    browserBaseURL: '/'
+    browserBaseURL: config.basePath
   },
   buildModules: [
     ['@nuxtjs/vuetify', { icons: { iconfont: 'mdi' } }],
