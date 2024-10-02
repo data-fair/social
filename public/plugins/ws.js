@@ -43,7 +43,7 @@ function configureWS (wsUrl, suffix = '') {
 
 export default ({ store, env }) => {
   // reconstruct this env var that we used to have but lost when implementing multi-domain exposition
-  const wsPublicUrl = (window.location.origin + env.basePath)
+  const wsPublicUrl = (window.location.origin + env.basePath + '/')
     .replace('http:', 'ws:').replace('https:', 'wss:')
   configureWS(wsPublicUrl)
   // TODO: the same for notifyUrl ?
