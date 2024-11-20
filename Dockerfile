@@ -1,6 +1,6 @@
 ############################################################################################################
 # Stage: prepare a base image with all native utils pre-installed, used both by builder and definitive image
-FROM node:20.13.1-alpine3.19 AS nativedeps
+FROM node:20.18.0-alpine3.20 AS nativedeps
 RUN apk add --no-cache curl
 ######################################
 FROM nativedeps AS builder
