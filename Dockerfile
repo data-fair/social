@@ -14,6 +14,7 @@ WORKDIR /webapp
 
 # Installing dependencies in webapp directory
 COPY LICENSE .
+COPY patches patches
 COPY package.json .
 COPY package-lock.json .
 
