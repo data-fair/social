@@ -1,7 +1,8 @@
 ############################################################################################################
 # Stage: prepare a base image with all native utils pre-installed, used both by builder and definitive image
-FROM node:20.18.0-alpine3.20 AS nativedeps
+FROM node:20.18.1-alpine3.20 AS nativedeps
 RUN apk add --no-cache curl
+RUN npm i -g npm@10
 ######################################
 FROM nativedeps AS builder
 MAINTAINER "contact@koumoul.com"
