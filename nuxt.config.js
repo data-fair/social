@@ -1,6 +1,6 @@
 let config = { ...require('config') }
 
-config.basePath = process.env.NODE_ENV === 'development' ? '' : '/social'
+config.basePath = process.env.NODE_ENV === 'development' ? '' : `${process.env.PREFIX}/social`
 
 const isBuilding = process.argv[2] === 'build'
 
@@ -86,8 +86,8 @@ module.exports = {
   env: {
     basePath: config.basePath,
     publicUrl: config.basePath,
-    directoryUrl: '/simple-directory',
-    notifyUrl: '/notify',
+    directoryUrl: `${process.env.PREFIX}/simple-directory`,
+    notifyUrl: `${process.env.PREFIX}/notify`,
     theme: config.theme,
     i18n: config.i18n,
     messageMaxLength: config.messageMaxLength
