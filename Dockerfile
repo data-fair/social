@@ -7,7 +7,7 @@ FROM nativedeps AS builder
 MAINTAINER "contact@koumoul.com"
 
 # Installing clean-modules
-RUN npm install --location=global clean-modules@3.1.1
+RUN npm install --location=global clean-modules@3.0.5
 
 WORKDIR /webapp
 
