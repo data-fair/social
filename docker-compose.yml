@@ -23,8 +23,8 @@ services:
       - CIPHER_PASSWORD=dev
       - CONTACT=contact@test.com
     volumes:
-      - ./test/resources/users.json:/webapp/data/users.json
-      - ./test/resources/organizations.json:/webapp/data/organizations.json
+      - ./test/resources/users.json:/app/data/users.json
+      - ./test/resources/organizations.json:/app/data/organizations.json
 
   openapi-viewer:
     image: koumoul/openapi-viewer:1
