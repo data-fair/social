@@ -6,7 +6,7 @@ services:
     volumes:
       - mongo-data:/data/db
   sd:
-    image: ghcr.io/data-fair/simple-directory:master
+    image: ghcr.io/data-fair/simple-directory:7
     network_mode: host
     environment:
       - DEBUG=webhooks
@@ -20,11 +20,10 @@ services:
       - NO_UI=${NO_UI}
       - AUTHRATELIMIT_ATTEMPTS=200
       - DEFAULT_MAX_CREATED_ORGS=10
-      - CIPHER_PASSWORD=dev
       - CONTACT=contact@test.com
     volumes:
-      - ./test/resources/users.json:/app/data/users.json
-      - ./test/resources/organizations.json:/app/data/organizations.json
+      - ./test/resources/users.json:/webapp/data/users.json
+      - ./test/resources/organizations.json:/webapp/data/organizations.json
 
   openapi-viewer:
     image: koumoul/openapi-viewer:1
