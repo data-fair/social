@@ -1,10 +1,9 @@
 ############################################################################################################
 # Stage: prepare a base image with all native utils pre-installed, used both by builder and definitive image
-FROM node:20.18.3-alpine3.21 AS nativedeps
+FROM node:22.14.0-alpine3.21 AS nativedeps
 RUN apk add --no-cache curl
 ######################################
 FROM nativedeps AS builder
-MAINTAINER "contact@koumoul.com"
 
 # Installing clean-modules
 RUN npm install --location=global clean-modules@3.1.1
@@ -26,7 +25,7 @@ COPY config config
 COPY contract contract
 
 # Build UI
-ENV NODE_ENV production
+ENV NODE_ENV=production
 RUN npm run build
 
 # Adding server files
@@ -46,10 +45,7 @@ RUN rm -rf node_modules/.cache
 
 ##################################
 # Stage: main nodejs service stage
-FROM nativedeps
-MAINTAINER "contact@koumoul.com"
-
-RUN apk add --no-cache dumb-init
+FROM nativedeps AS main
 
 WORKDIR /webapp
 
@@ -71,8 +67,19 @@ COPY LICENSE .
 # Compatibility with OpenShift
 RUN chgrp -R 0 . && chmod -R g=u .
 
+##################################
+# Stage: final image
+FROM nativedeps
+RUN apk add --no-cache dumb-init
+LABEL maintainer="contact@koumoul.com"
+
+WORKDIR /webapp
+
+# Copying the built webapp
+COPY --from=main /webapp /webapp
+
 # configure node webapp environment
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 # Default port of our webapps
 EXPOSE 8080
