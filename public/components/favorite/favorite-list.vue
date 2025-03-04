@@ -13,7 +13,7 @@
     <v-list-item
       v-for="favorite in favorites.results"
       :key="favorite._id"
-      :href="favorite.url"
+      :href="encodeURIComponent(favorite.url)"
       target="_top"
     >
       <v-list-item-content>
