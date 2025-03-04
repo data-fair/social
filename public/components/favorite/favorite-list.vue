@@ -13,7 +13,7 @@
     <v-list-item
       v-for="favorite in favorites.results"
       :key="favorite._id"
-      :href="encodeURIComponent(favorite.url)"
+      :href="favorite.url"
       target="_top"
     >
       <v-list-item-content>
@@ -86,7 +86,7 @@ export default {
       else this.favorites = favorites
       if (this.urlTemplate) {
         favorites.results.forEach(f => {
-          f.url = this.urlTemplate.replace('{suffix}', f.topic.key.replace(this.prefix, ''))
+          f.url = this.urlTemplate.replace('{suffix}', encodeURIComponent(f.topic.key.replace(this.prefix, '')))
         })
       }
       this.loading = false
