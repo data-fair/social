@@ -1,0 +1,5 @@
+{
+  "notifications.message": "Resposta de {{userName}} ao seu comentário: {{content}}",
+  "notifications.message.description": "Responder ao seu comentário",
+  "notifications.message.title": "Você recebeu uma resposta ao seu comentário"
+}

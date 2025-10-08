@@ -22,16 +22,16 @@ function getNotificationId (serviceKey = 'global', eventType) {
 
 const serviceKey = 'social'
 
-function getEvent (eventId, event) {
+function getEvent (eventId, event, locale) {
   return {
     id: eventId,
     key: getNotificationId(serviceKey, eventId),
-    description: i18n.i18nInstance.__(event.keyDescription)
+    description: i18n.i18nInstance.__({ phrase: event.description, locale })
   }
 }
 
 router.get('/', asyncWrap(async (req, res) => {
   const subscriptions = []
-  for (const eventId in notifyList) subscriptions.push(getEvent(eventId, notifyList[eventId]))
+  for (const eventId in notifyList) subscriptions.push(getEvent(eventId, notifyList[eventId], req.locale || 'en'))
   res.json(subscriptions)
 }))
